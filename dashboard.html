@@ -6,7 +6,7 @@
 <title>GEROT UTR SMG1 – Dashboard Diário</title>
 <style>
   * { margin: 0; padding: 0; box-sizing: border-box; }
-  body { font-family: 'Segoe UI', Arial, sans-serif; background: #f5f5f5; height: 100vh; overflow: hidden; display: flex; flex-direction: column; }
+  body { font-family: 'Segoe UI', Arial, sans-serif; background: #f0f2f5; height: 100vh; overflow: hidden; display: flex; flex-direction: column; }
   .header { background: #FFE600; padding: 8px 16px; display: flex; align-items: center; justify-content: space-between; flex-shrink: 0; }
   .header-left { display: flex; align-items: center; gap: 12px; }
   .logo { width: 38px; height: 38px; background: #333; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: #FFE600; font-weight: bold; font-size: 13px; }
@@ -15,28 +15,52 @@
   .date-selector { display: flex; align-items: center; gap: 8px; }
   .date-selector label { font-size: 12px; font-weight: 600; color: #333; }
   .date-selector select { font-size: 13px; font-weight: 600; color: #333; background: #fff; border: 2px solid #333; border-radius: 6px; padding: 4px 10px; cursor: pointer; }
-  .summary-bar { background: #fff; border-bottom: 1px solid #ddd; padding: 6px 16px; display: flex; gap: 24px; align-items: center; flex-shrink: 0; }
-  .badge-green  { background: #e8f5e9; color: #2e7d32; border-radius: 12px; padding: 2px 10px; font-size: 12px; font-weight: 600; }
-  .badge-red    { background: #ffebee; color: #c62828; border-radius: 12px; padding: 2px 10px; font-size: 12px; font-weight: 600; }
-  .badge-yellow { background: #fffde7; color: #f57f17; border-radius: 12px; padding: 2px 10px; font-size: 12px; font-weight: 600; }
-  .content { flex: 1; overflow: hidden; padding: 8px 12px; display: flex; flex-direction: column; gap: 6px; }
+  .summary-bar { background: #fff; border-bottom: 1px solid #ddd; padding: 6px 16px; display: flex; gap: 20px; align-items: center; flex-shrink: 0; }
+  .badge-green  { background: #1b5e20; color: #fff; border-radius: 20px; padding: 3px 12px; font-size: 12px; font-weight: 700; letter-spacing: 0.3px; }
+  .badge-red    { background: #b71c1c; color: #fff; border-radius: 20px; padding: 3px 12px; font-size: 12px; font-weight: 700; letter-spacing: 0.3px; }
+  .badge-yellow { background: #e65100; color: #fff; border-radius: 20px; padding: 3px 12px; font-size: 12px; font-weight: 700; letter-spacing: 0.3px; }
+  .content { flex: 1; overflow: hidden; padding: 8px 12px; display: flex; flex-direction: column; gap: 7px; }
   .section { flex-shrink: 0; }
-  .section-title { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; color: #666; margin-bottom: 5px; border-left: 3px solid #999; padding-left: 6px; }
+  .section-title { font-size: 10px; font-weight: 800; text-transform: uppercase; letter-spacing: 1px; color: #444; margin-bottom: 5px; border-left: 3px solid #aaa; padding-left: 7px; }
   .cards-row    { display: flex; gap: 6px; }
   .cards-grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; }
-  .card { background: #fff; border-radius: 6px; border-left: 4px solid #ccc; padding: 7px 10px; position: relative; box-shadow: 0 1px 3px rgba(0,0,0,0.08); flex: 1; }
-  .card.green  { border-left-color: #43a047; }
-  .card.red    { border-left-color: #e53935; }
-  .card.yellow { border-left-color: #f9a825; }
-  .card-badge { position: absolute; top: 5px; right: 7px; font-size: 13px; }
-  .card-name  { font-size: 9.5px; font-weight: 600; color: #555; margin-bottom: 3px; padding-right: 20px; line-height: 1.2; }
-  .card-value { font-size: 18px; font-weight: 700; color: #222; line-height: 1; }
-  .card-value.big { font-size: 22px; }
-  .card-meta  { font-size: 9px; color: #999; margin-top: 2px; }
+
+  /* CARD BASE */
+  .card { background: #fff; border-radius: 8px; border-left: 5px solid #ccc; padding: 8px 10px 6px; position: relative; box-shadow: 0 1px 4px rgba(0,0,0,0.10); flex: 1; }
+  .card.green  { border-left-color: #2e7d32; background: #f9fff9; }
+  .card.red    { border-left-color: #c62828; background: #fff9f9; }
+  .card.yellow { border-left-color: #e65100; background: #fffbf5; }
+
+  /* STATUS CHIP — canto superior direito */
+  .card-status {
+    position: absolute; top: 7px; right: 8px;
+    font-size: 9px; font-weight: 800; letter-spacing: 0.5px;
+    border-radius: 4px; padding: 2px 6px; text-transform: uppercase;
+  }
+  .card.green  .card-status { background: #2e7d32; color: #fff; }
+  .card.red    .card-status { background: #c62828; color: #fff; }
+  .card.yellow .card-status { background: #e65100; color: #fff; }
+
+  /* NOME DO INDICADOR — destaque */
+  .card-name {
+    font-size: 11px; font-weight: 700; color: #222;
+    margin-bottom: 4px; padding-right: 52px; line-height: 1.3;
+    letter-spacing: 0.1px;
+  }
+
+  /* VALOR */
+  .card-value { font-size: 20px; font-weight: 800; color: #111; line-height: 1; }
+  .card-value.big { font-size: 24px; }
+  .card.green .card-value { color: #1b5e20; }
+  .card.red   .card-value { color: #b71c1c; }
+
+  /* META */
+  .card-meta  { font-size: 9px; color: #999; margin-top: 3px; font-weight: 500; }
   .no-data    { color: #bbb; font-size: 14px; font-weight: 600; }
 </style>
 </head>
 <body>
+
 <div class="header">
   <div class="header-left">
     <div class="logo">MLB</div>
@@ -53,94 +77,98 @@
     </select>
   </div>
 </div>
+
 <div class="summary-bar">
   <span id="badgeGreen"   class="badge-green" >Na Meta: -</span>
   <span id="badgeRed"     class="badge-red"   >Fora da Meta: -</span>
   <span id="badgePending" class="badge-yellow">Pendente: -</span>
   <div style="margin-left:auto;font-size:10px;color:#aaa;">Fonte: Tableau + Planilha Operacional</div>
 </div>
+
 <div class="content">
   <div class="section">
     <div class="section-title">People</div>
     <div class="cards-row">
       <div class="card" id="card-abs" style="width:100%">
-        <div class="card-badge" id="badge-abs"></div>
+        <div class="card-status" id="status-abs"></div>
         <div class="card-name">Absenteísmo Absoluto</div>
         <div class="card-value big" id="val-abs"></div>
         <div class="card-meta">Meta: &lt;= 4,00%</div>
       </div>
     </div>
   </div>
+
   <div class="section">
     <div class="section-title">Profitability</div>
     <div class="cards-row">
       <div class="card" id="card-lms">
-        <div class="card-badge" id="badge-lms"></div>
+        <div class="card-status" id="status-lms"></div>
         <div class="card-name">% Utilização LMS</div>
         <div class="card-value" id="val-lms"></div>
         <div class="card-meta">Meta: &gt;= 80%</div>
       </div>
       <div class="card" id="card-cia">
-        <div class="card-badge" id="badge-cia"></div>
+        <div class="card-status" id="status-cia"></div>
         <div class="card-name">%CIA</div>
         <div class="card-value" id="val-cia"></div>
         <div class="card-meta">Meta: &lt;= 5%</div>
       </div>
       <div class="card" id="card-coa">
-        <div class="card-badge" id="badge-coa"></div>
+        <div class="card-status" id="status-coa"></div>
         <div class="card-name">%COA</div>
         <div class="card-value" id="val-coa"></div>
         <div class="card-meta">Meta: &lt;= 5%</div>
       </div>
       <div class="card" id="card-spr">
-        <div class="card-badge" id="badge-spr"></div>
+        <div class="card-status" id="status-spr"></div>
         <div class="card-name">SPR LM</div>
         <div class="card-value" id="val-spr"></div>
         <div class="card-meta">Meta: &gt;= 67,58</div>
       </div>
     </div>
   </div>
+
   <div class="section">
     <div class="section-title">Experience</div>
     <div class="cards-grid-4">
       <div class="card" id="card-dit">
-        <div class="card-badge" id="badge-dit"></div>
-        <div class="card-name">DIT - Pacotes Acum. SVC</div>
+        <div class="card-status" id="status-dit"></div>
+        <div class="card-name">DIT – Pacotes Acum. SVC</div>
         <div class="card-value" id="val-dit"></div>
         <div class="card-meta">Meta: &lt; 500 pcts</div>
       </div>
       <div class="card" id="card-delay">
-        <div class="card-badge" id="badge-delay"></div>
+        <div class="card-status" id="status-delay"></div>
         <div class="card-name">Delay (Cause SVC)</div>
         <div class="card-value" id="val-delay"></div>
         <div class="card-meta">Meta: &lt;= 4%</div>
       </div>
       <div class="card" id="card-oot">
-        <div class="card-badge" id="badge-oot"></div>
+        <div class="card-status" id="status-oot"></div>
         <div class="card-name">OOT SVC (OpsClock 2.0)</div>
         <div class="card-value" id="val-oot"></div>
         <div class="card-meta">Meta: &gt;= 85%</div>
       </div>
       <div class="card" id="card-tmc">
-        <div class="card-badge" id="badge-tmc"></div>
+        <div class="card-status" id="status-tmc"></div>
         <div class="card-name">TMC (% Cumprimento Temp.)</div>
         <div class="card-value" id="val-tmc"></div>
         <div class="card-meta">Meta: &gt;= 83%</div>
       </div>
       <div class="card" id="card-ds">
-        <div class="card-badge" id="badge-ds"></div>
+        <div class="card-status" id="status-ds"></div>
         <div class="card-name">Delivery Success</div>
         <div class="card-value" id="val-ds"></div>
         <div class="card-meta">Meta: &gt;= 98,1%</div>
       </div>
       <div class="card" id="card-fech">
-        <div class="card-badge" id="badge-fech"></div>
-        <div class="card-name">Fechamento Automatico</div>
+        <div class="card-status" id="status-fech"></div>
+        <div class="card-name">Fechamento Automático</div>
         <div class="card-value" id="val-fech"></div>
         <div class="card-meta">Meta: &gt;= 70%</div>
       </div>
       <div class="card" id="card-waves">
-        <div class="card-badge" id="badge-waves"></div>
+        <div class="card-status" id="status-waves"></div>
         <div class="card-name">OOT Waves 3.0</div>
         <div class="card-value" id="val-waves"></div>
         <div class="card-meta">Meta: &gt;= 85%</div>
@@ -148,6 +176,7 @@
     </div>
   </div>
 </div>
+
 <script>
 var HISTORICO = {
   "01/06/2026": { abs:9.89,  lms:82.24, cia:10.40, coa:6.49,  spr:65.58, delay:33.33, oot:83.66, tmc:45.57, ds:95.35, fech:49.13, waves:60.95, dit:889 },
@@ -168,7 +197,7 @@ var METAS = {
   dit:   function(v){ return v < 500; }
 };
 function fmt(key, v) {
-  if (v === null || v === undefined) return '<span class="no-data">Pendente</span>';
+  if (v === null || v === undefined) return '<span class="no-data">–</span>';
   if (key === 'dit') return v.toLocaleString('pt-BR');
   if (key === 'spr') return v.toLocaleString('pt-BR', {minimumFractionDigits:2, maximumFractionDigits:2});
   return v.toLocaleString('pt-BR', {minimumFractionDigits:2, maximumFractionDigits:2}) + '%';
@@ -181,25 +210,25 @@ function renderDashboard() {
   var ok = 0, bad = 0, pend = 0;
   for (var i = 0; i < keys.length; i++) {
     var k = keys[i];
-    var card  = document.getElementById('card-'  + k);
-    var valEl = document.getElementById('val-'   + k);
-    var badge = document.getElementById('badge-' + k);
-    if (!card || !valEl || !badge) continue;
+    var card   = document.getElementById('card-'   + k);
+    var valEl  = document.getElementById('val-'    + k);
+    var status = document.getElementById('status-' + k);
+    if (!card || !valEl || !status) continue;
     var v = row[k];
     card.className = 'card';
     if (v === null || v === undefined) {
       card.classList.add('yellow');
-      badge.textContent = 'Pendente';
-      valEl.innerHTML = '<span class="no-data">Pendente</span>';
+      status.textContent = 'Pendente';
+      valEl.innerHTML = '<span class="no-data">–</span>';
       pend++;
     } else if (METAS[k](v)) {
       card.classList.add('green');
-      badge.textContent = 'OK';
+      status.textContent = 'Na Meta';
       valEl.innerHTML = fmt(k, v);
       ok++;
     } else {
       card.classList.add('red');
-      badge.textContent = 'FORA';
+      status.textContent = 'Fora da Meta';
       valEl.innerHTML = fmt(k, v);
       bad++;
     }
