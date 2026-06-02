@@ -19,26 +19,27 @@
 
   .summary-bar { background: #fff; border-bottom: 1px solid #ddd; padding: 6px 16px; display: flex; gap: 24px; align-items: center; flex-shrink: 0; }
   .badge-green { background: #e8f5e9; color: #2e7d32; border-radius: 12px; padding: 2px 10px; font-size: 12px; font-weight: 600; }
-  .badge-red { background: #ffebee; color: #c62828; border-radius: 12px; padding: 2px 10px; font-size: 12px; font-weight: 600; }
-  .badge-yellow { background: #fffde7; color: #f57f17; border-radius: 12px; padding: 2px 10px; font-size: 12px; font-weight: 600; }
+  .badge-red   { background: #ffebee; color: #c62828; border-radius: 12px; padding: 2px 10px; font-size: 12px; font-weight: 600; }
+  .badge-yellow{ background: #fffde7; color: #f57f17; border-radius: 12px; padding: 2px 10px; font-size: 12px; font-weight: 600; }
 
   .content { flex: 1; overflow: hidden; padding: 8px 12px; display: flex; flex-direction: column; gap: 6px; }
   .section { flex-shrink: 0; }
   .section-title { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; color: #666; margin-bottom: 5px; border-left: 3px solid #999; padding-left: 6px; }
-  .cards-row { display: flex; gap: 6px; }
+
+  .cards-row    { display: flex; gap: 6px; }
   .cards-grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; }
 
   .card { background: #fff; border-radius: 6px; border-left: 4px solid #ccc; padding: 7px 10px; position: relative; box-shadow: 0 1px 3px rgba(0,0,0,0.08); flex: 1; }
-  .card.green { border-left-color: #43a047; }
-  .card.red { border-left-color: #e53935; }
+  .card.green  { border-left-color: #43a047; }
+  .card.red    { border-left-color: #e53935; }
   .card.yellow { border-left-color: #f9a825; }
-  .card-badge { position: absolute; top: 5px; right: 7px; font-size: 14px; }
-  .card-name { font-size: 9.5px; font-weight: 600; color: #555; margin-bottom: 3px; padding-right: 20px; line-height: 1.2; }
+
+  .card-badge { position: absolute; top: 5px; right: 7px; font-size: 13px; }
+  .card-name  { font-size: 9.5px; font-weight: 600; color: #555; margin-bottom: 3px; padding-right: 20px; line-height: 1.2; }
   .card-value { font-size: 18px; font-weight: 700; color: #222; line-height: 1; }
   .card-value.big { font-size: 22px; }
-  .card-meta { font-size: 9px; color: #999; margin-top: 2px; }
-  .preview-tag { background: #fff8e1; color: #e65100; font-size: 8px; font-weight: 700; border-radius: 3px; padding: 1px 4px; margin-left: 3px; vertical-align: middle; }
-  .no-data { color: #bbb; font-size: 14px; font-weight: 600; }
+  .card-meta  { font-size: 9px; color: #999; margin-top: 2px; }
+  .no-data    { color: #bbb; font-size: 14px; font-weight: 600; }
 </style>
 </head>
 <body>
@@ -52,23 +53,27 @@
     </div>
   </div>
   <div class="date-selector">
-    <label>📅 Data:</label>
-    <select id="datePicker" onchange="renderDashboard()"></select>
+    <label>Data:</label>
+    <select id="datePicker" onchange="renderDashboard()">
+      <option value="01/06/2026">01/06/2026</option>
+      <option value="31/05/2026">31/05/2026</option>
+    </select>
   </div>
 </div>
 
 <div class="summary-bar">
-  <span id="badgeGreen" class="badge-green">✅ Na Meta: –</span>
-  <span id="badgeRed" class="badge-red">🔴 Fora da Meta: –</span>
-  <span id="badgePending" class="badge-yellow">⏳ Pendente: –</span>
+  <span id="badgeGreen"  class="badge-green" >Na Meta: –</span>
+  <span id="badgeRed"    class="badge-red"   >Fora da Meta: –</span>
+  <span id="badgePending"class="badge-yellow">Pendente: –</span>
   <div style="margin-left:auto; font-size:10px; color:#aaa;">Fonte: Tableau + Planilha Operacional</div>
 </div>
 
 <div class="content">
+
   <div class="section">
-    <div class="section-title">👥 People</div>
+    <div class="section-title">People</div>
     <div class="cards-row">
-      <div class="card card-full" id="card-abs" style="width:100%">
+      <div class="card" id="card-abs" style="width:100%">
         <div class="card-badge" id="badge-abs"></div>
         <div class="card-name">Absenteísmo Absoluto</div>
         <div class="card-value big" id="val-abs"></div>
@@ -78,7 +83,7 @@
   </div>
 
   <div class="section">
-    <div class="section-title">💰 Profitability</div>
+    <div class="section-title">Profitability</div>
     <div class="cards-row">
       <div class="card" id="card-lms">
         <div class="card-badge" id="badge-lms"></div>
@@ -108,7 +113,7 @@
   </div>
 
   <div class="section">
-    <div class="section-title">⭐ Experience</div>
+    <div class="section-title">Experience</div>
     <div class="cards-grid-4">
       <div class="card" id="card-dit">
         <div class="card-badge" id="badge-dit"></div>
@@ -144,4 +149,6 @@
         <div class="card-badge" id="badge-fech"></div>
         <div class="card-name">Fechamento Automático</div>
         <div class="card-value" id="val-fech"></div>
-        <di
+        <div class="card-meta">Meta: ≥ 70%</div>
+      </div>
+      <div class="card" i

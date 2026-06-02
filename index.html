@@ -3,333 +3,152 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>GEROT UTR – SMG1</title>
+<title>GEROT UTR SMG1 – Dashboard Diário</title>
 <style>
-  :root {
-    --yellow: #FFE600;
-    --green: #43a047;
-    --green-bg: #f1f8f1;
-    --red: #e53935;
-    --red-bg: #fff5f5;
-    --amber: #f9a825;
-    --amber-bg: #fffbf0;
-    --bg: #f0f2f5;
-    --card-bg: #fff;
-    --radius: 10px;
-    --pad: 16px;
-  }
-  * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
-  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif; background: var(--bg); min-height: 100vh; }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: 'Segoe UI', Arial, sans-serif; background: #f5f5f5; height: 100vh; overflow: hidden; display: flex; flex-direction: column; }
 
-  /* ── HEADER ── */
-  .header {
-    background: var(--yellow);
-    padding: 12px var(--pad);
-    position: sticky; top: 0; z-index: 100;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.12);
-  }
-  .header-inner {
-    max-width: 1100px; margin: 0 auto;
-    display: flex; align-items: center; justify-content: space-between; gap: 12px;
-  }
-  .logo-area { display: flex; align-items: center; gap: 10px; }
-  .logo { width: 38px; height: 38px; background: #1a1a1a; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-weight: 900; color: var(--yellow); font-size: 14px; flex-shrink: 0; }
-  .title { font-size: 17px; font-weight: 800; color: #1a1a1a; line-height: 1.2; }
-  .subtitle { font-size: 11px; color: #555; }
-  .header-right { display: flex; align-items: center; gap: 16px; }
-  .date-display { text-align: right; }
-  .date-big { font-size: 16px; font-weight: 800; color: #1a1a1a; }
-  .date-sub { font-size: 10px; color: #666; }
+  .header { background: #FFE600; padding: 8px 16px; display: flex; align-items: center; justify-content: space-between; flex-shrink: 0; }
+  .header-left { display: flex; align-items: center; gap: 12px; }
+  .logo { width: 38px; height: 38px; background: #333; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: #FFE600; font-weight: bold; font-size: 13px; }
+  .header-title { font-size: 15px; font-weight: 700; color: #333; }
+  .header-sub { font-size: 11px; color: #555; }
+  .date-selector { display: flex; align-items: center; gap: 8px; }
+  .date-selector label { font-size: 12px; font-weight: 600; color: #333; }
+  .date-selector select { font-size: 13px; font-weight: 600; color: #333; background: #fff; border: 2px solid #333; border-radius: 6px; padding: 4px 10px; cursor: pointer; }
 
-  /* ── TOOLBAR (date chips + summary) ── */
-  .toolbar {
-    background: #fff;
-    border-bottom: 1px solid #e4e4e4;
-    padding: 8px var(--pad);
-    position: sticky; top: 62px; z-index: 99;
-  }
-  .toolbar-inner {
-    max-width: 1100px; margin: 0 auto;
-    display: flex; align-items: center; gap: 12px; flex-wrap: wrap;
-  }
-  .date-chips { display: flex; gap: 6px; overflow-x: auto; scrollbar-width: none; flex-shrink: 0; }
-  .date-chips::-webkit-scrollbar { display: none; }
-  .chip {
-    padding: 5px 14px; border-radius: 20px;
-    border: 1.5px solid #ddd; background: #f6f6f6;
-    font-size: 12px; font-weight: 600; color: #555;
-    cursor: pointer; white-space: nowrap; flex-shrink: 0;
-    transition: all 0.15s;
-  }
-  .chip.active { background: #1a1a1a; border-color: #1a1a1a; color: #fff; }
-  .chip:active { transform: scale(0.96); }
+  .summary-bar { background: #fff; border-bottom: 1px solid #ddd; padding: 6px 16px; display: flex; gap: 24px; align-items: center; flex-shrink: 0; }
+  .badge-green { background: #e8f5e9; color: #2e7d32; border-radius: 12px; padding: 2px 10px; font-size: 12px; font-weight: 600; }
+  .badge-red   { background: #ffebee; color: #c62828; border-radius: 12px; padding: 2px 10px; font-size: 12px; font-weight: 600; }
+  .badge-yellow{ background: #fffde7; color: #f57f17; border-radius: 12px; padding: 2px 10px; font-size: 12px; font-weight: 600; }
 
-  .summary-pills { display: flex; gap: 6px; flex-shrink: 0; }
-  .pill {
-    padding: 4px 11px; border-radius: 20px;
-    font-size: 12px; font-weight: 700; white-space: nowrap;
-  }
-  .pill-green { background: var(--green-bg); color: #2e7d32; }
-  .pill-red   { background: var(--red-bg);   color: #c62828; }
-  .pill-amber { background: var(--amber-bg); color: #e65100; }
+  .content { flex: 1; overflow: hidden; padding: 8px 12px; display: flex; flex-direction: column; gap: 6px; }
+  .section { flex-shrink: 0; }
+  .section-title { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; color: #666; margin-bottom: 5px; border-left: 3px solid #999; padding-left: 6px; }
 
-  /* ── MAIN CONTENT ── */
-  .main { max-width: 1100px; margin: 0 auto; padding: 14px var(--pad) 28px; display: flex; flex-direction: column; gap: 14px; }
+  .cards-row    { display: flex; gap: 6px; }
+  .cards-grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; }
 
-  /* ── SECTION ── */
-  .section { background: var(--card-bg); border-radius: var(--radius); padding: 12px 16px; box-shadow: 0 1px 4px rgba(0,0,0,0.06); }
-  .section-title { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; color: #999; margin-bottom: 10px; }
+  .card { background: #fff; border-radius: 6px; border-left: 4px solid #ccc; padding: 7px 10px; position: relative; box-shadow: 0 1px 3px rgba(0,0,0,0.08); flex: 1; }
+  .card.green  { border-left-color: #43a047; }
+  .card.red    { border-left-color: #e53935; }
+  .card.yellow { border-left-color: #f9a825; }
 
-  /* ── CARD ROW ── */
-  .cards-row { display: flex; gap: 10px; flex-wrap: wrap; }
-  .cards-row .card { flex: 1; min-width: 140px; }
-
-  /* ── CARD GRID (Experience – 4 col desktop, 2 col tablet, 1 col mobile) ── */
-  .cards-grid { display: grid; gap: 10px; grid-template-columns: repeat(4, 1fr); }
-
-  /* ── CARD ── */
-  .card {
-    border-radius: 8px;
-    border-left: 4px solid #e0e0e0;
-    background: #fafafa;
-    padding: 10px 12px;
-    position: relative;
-    display: flex; flex-direction: column; gap: 4px;
-  }
-  .card-green  { border-left-color: var(--green);  background: #f9fdf9; }
-  .card-red    { border-left-color: var(--red);    background: #fff9f9; }
-  .card-amber  { border-left-color: var(--amber);  background: #fffdf0; }
-
-  .card-header { display: flex; align-items: center; justify-content: space-between; }
-  .card-name { font-size: 10px; font-weight: 700; color: #888; text-transform: uppercase; letter-spacing: 0.3px; }
-  .card-status { font-size: 14px; flex-shrink: 0; }
-
-  .card-value { font-size: 22px; font-weight: 800; color: #1a1a1a; line-height: 1.1; }
-  .card-value.pending { font-size: 16px; color: #ccc; }
-  .card-meta { font-size: 10px; color: #aaa; }
-  .preview-tag {
-    display: inline-block; background: #fff3cd; color: #e65100;
-    font-size: 8px; font-weight: 700; padding: 1px 4px; border-radius: 3px;
-    margin-left: 4px; vertical-align: middle;
-  }
-
-  /* People full-width card — bigger value */
-  .card-people .card-value { font-size: 30px; }
-
-  /* ── FOOTER ── */
-  .footer { text-align: center; padding: 8px; font-size: 10px; color: #bbb; }
-
-  /* ── RESPONSIVE ── */
-  @media (max-width: 860px) {
-    .cards-grid { grid-template-columns: repeat(2, 1fr); }
-    .cards-row .card { min-width: 120px; }
-  }
-  @media (max-width: 540px) {
-    :root { --pad: 12px; }
-    .header { top: 0; }
-    .toolbar { top: 60px; }
-    .toolbar-inner { gap: 8px; }
-    .summary-pills { width: 100%; }
-    .cards-row { flex-direction: column; }
-    .cards-row .card { min-width: unset; }
-    .cards-grid { grid-template-columns: 1fr 1fr; }
-    .card-value { font-size: 20px; }
-    .card-people .card-value { font-size: 26px; }
-    .title { font-size: 15px; }
-  }
-  @media (max-width: 360px) {
-    .cards-grid { grid-template-columns: 1fr; }
-  }
+  .card-badge { position: absolute; top: 5px; right: 7px; font-size: 13px; }
+  .card-name  { font-size: 9.5px; font-weight: 600; color: #555; margin-bottom: 3px; padding-right: 20px; line-height: 1.2; }
+  .card-value { font-size: 18px; font-weight: 700; color: #222; line-height: 1; }
+  .card-value.big { font-size: 22px; }
+  .card-meta  { font-size: 9px; color: #999; margin-top: 2px; }
+  .no-data    { color: #bbb; font-size: 14px; font-weight: 600; }
 </style>
 </head>
 <body>
 
-<!-- HEADER -->
 <div class="header">
-  <div class="header-inner">
-    <div class="logo-area">
-      <div class="logo">ML</div>
-      <div>
-        <div class="title">GEROT UTR – SMG1</div>
-        <div class="subtitle">Dashboard Diário de KPIs · SVC</div>
-      </div>
+  <div class="header-left">
+    <div class="logo">MLB</div>
+    <div>
+      <div class="header-title">GEROT UTR — Dashboard Diário SMG1</div>
+      <div class="header-sub">Gestão da Rotina · Site SMG1 · SVC</div>
     </div>
-    <div class="header-right">
-      <div class="date-display">
-        <div class="date-big" id="hdrDate">—</div>
-        <div class="date-sub" id="hdrWeekday">—</div>
-      </div>
-    </div>
+  </div>
+  <div class="date-selector">
+    <label>Data:</label>
+    <select id="datePicker" onchange="renderDashboard()">
+      <option value="01/06/2026">01/06/2026</option>
+      <option value="31/05/2026">31/05/2026</option>
+    </select>
   </div>
 </div>
 
-<!-- TOOLBAR -->
-<div class="toolbar">
-  <div class="toolbar-inner">
-    <div class="date-chips" id="dateChips"></div>
-    <div class="summary-pills" id="summaryPills"></div>
-  </div>
+<div class="summary-bar">
+  <span id="badgeGreen"  class="badge-green" >Na Meta: –</span>
+  <span id="badgeRed"    class="badge-red"   >Fora da Meta: –</span>
+  <span id="badgePending"class="badge-yellow">Pendente: –</span>
+  <div style="margin-left:auto; font-size:10px; color:#aaa;">Fonte: Tableau + Planilha Operacional</div>
 </div>
 
-<!-- MAIN -->
-<div class="main" id="main"></div>
+<div class="content">
 
-<div class="footer">Fonte: Tableau Cloud &amp; Planilha Operacional · GEROT UTR SMG1</div>
-
-<script>
-// ── DADOS ────────────────────────────────────────────────────────────────────
-const HISTORY = [
-  {
-    date: "31/05/2026",
-    abs: 16.98, lms: 76.84, cia: 15.38, coa: 10.39, spr: 80.39,
-    delay: null, oot_svc: 94.51, tmc: 45.77, delivery: 88.71,
-    fag: 58.67, oot_waves: 80.17, dit: 741,
-    previews: []
-  },
-  {
-    date: "01/06/2026",
-    abs: 9.89, lms: 82.24, cia: 10.40, coa: 6.49, spr: 65.58,
-    delay: 33.33, oot_svc: 83.66, tmc: 45.57, delivery: 21.72,
-    fag: 49.13, oot_waves: null, dit: null,
-    previews: ["oot_svc"]
-  }
-];
-
-// ── KPI DEFINITIONS ──────────────────────────────────────────────────────────
-const KPIS = [
-  // People
-  { id:"abs",       name:"Absenteísmo Absoluto",  section:"people",        meta:"Meta: ≤ 4%",      fmt:pct, check:v=>v<=4 },
-  // Profitability
-  { id:"lms",       name:"% Utilização LMS",       section:"profitability", meta:"Meta: ≥ 80%",     fmt:pct, check:v=>v>=80 },
-  { id:"cia",       name:"%CIA",                   section:"profitability", meta:"Meta: ≤ 5%",      fmt:pct, check:v=>v<=5 },
-  { id:"coa",       name:"%COA",                   section:"profitability", meta:"Meta: ≤ 5%",      fmt:pct, check:v=>v<=5 },
-  { id:"spr",       name:"SPR LM",                 section:"profitability", meta:"Meta: ≥ 67,58",   fmt:num, check:v=>v>=67.58 },
-  // Experience
-  { id:"dit",       name:"DIT – Pcts Acum. SVC",   section:"experience",   meta:"Meta: < 500 pcts", fmt:int, check:v=>v<500 },
-  { id:"delay",     name:"Delay (Cause SVC)",       section:"experience",   meta:"Meta: ≤ 4%",      fmt:pct, check:v=>v<=4, pendentIfZero:true },
-  { id:"oot_svc",   name:"OOT SVC (OpsClock 2.0)", section:"experience",   meta:"Meta: ≥ 85%",     fmt:pct, check:v=>v>=85 },
-  { id:"tmc",       name:"TMC (% Cumprimento)",     section:"experience",   meta:"Meta: ≥ 83%",     fmt:pct, check:v=>v>=83 },
-  { id:"delivery",  name:"Delivery Success",        section:"experience",   meta:"Meta: ≥ 98,1%",   fmt:pct, check:v=>v>=98.1 },
-  { id:"fag",       name:"Fechamento Automático",   section:"experience",   meta:"Meta: ≥ 70%",     fmt:pct, check:v=>v>=70 },
-  { id:"oot_waves", name:"OOT Waves 3.0",           section:"experience",   meta:"Meta: ≥ 85%",     fmt:pct, check:v=>v>=85 },
-];
-
-function pct(v) { return v.toFixed(2).replace(".",",") + "%"; }
-function num(v) { return v.toFixed(2).replace(".",","); }
-function int(v) { return Math.round(v).toLocaleString("pt-BR"); }
-
-const WEEKDAYS = ["Domingo","Segunda-Feira","Terça-Feira","Quarta-Feira","Quinta-Feira","Sexta-Feira","Sábado"];
-const MONTHS   = ["Jan","Fev","Mar","Abr","Mai","Jun","Jul","Ago","Set","Out","Nov","Dez"];
-
-function parseDate(s) { const [d,m,y]=s.split("/").map(Number); return new Date(y,m-1,d); }
-
-// ── STATE ────────────────────────────────────────────────────────────────────
-let sel = HISTORY.length - 1;
-
-// ── HELPERS ──────────────────────────────────────────────────────────────────
-function kpiStatus(kpi, row) {
-  const v = row[kpi.id];
-  const isPending = v===null || v===undefined || (kpi.pendentIfZero && v===0);
-  const isOk      = !isPending && kpi.check(v);
-  return { v, isPending, isOk };
-}
-
-function cardCls(isPending, isOk) {
-  if (isPending) return "card-amber";
-  return isOk ? "card-green" : "card-red";
-}
-function statusEmoji(isPending, isOk) {
-  if (isPending) return "⏳";
-  return isOk ? "✅" : "🔴";
-}
-
-function buildCard(kpi, row, extraClass) {
-  const { v, isPending, isOk } = kpiStatus(kpi, row);
-  const previews = row.previews || [];
-  const isPreview = previews.includes(kpi.id);
-  const cls  = cardCls(isPending, isOk);
-  const emoji = statusEmoji(isPending, isOk);
-  const valStr = isPending ? `<span class="card-value pending">—</span>`
-    : `<span class="card-value">${kpi.fmt(v)}${isPreview ? '<span class="preview-tag">prévia</span>' : ""}</span>`;
-  const metaStr = isPending ? `${kpi.meta} · Pendente` : kpi.meta;
-
-  return `<div class="card ${cls}${extraClass ? " "+extraClass : ""}">
-    <div class="card-header">
-      <div class="card-name">${kpi.name}</div>
-      <div class="card-status">${emoji}</div>
+  <div class="section">
+    <div class="section-title">People</div>
+    <div class="cards-row">
+      <div class="card" id="card-abs" style="width:100%">
+        <div class="card-badge" id="badge-abs"></div>
+        <div class="card-name">Absenteísmo Absoluto</div>
+        <div class="card-value big" id="val-abs"></div>
+        <div class="card-meta">Meta: ≤ 4,00%</div>
+      </div>
     </div>
-    ${valStr}
-    <div class="card-meta">${metaStr}</div>
-  </div>`;
-}
+  </div>
 
-// ── RENDER ────────────────────────────────────────────────────────────────────
-function renderChips() {
-  document.getElementById("dateChips").innerHTML =
-    HISTORY.map((r,i) => {
-      const d = parseDate(r.date);
-      const lbl = `${d.getDate()} ${MONTHS[d.getMonth()]}`;
-      return `<div class="chip${i===sel?" active":""}" onclick="pick(${i})">${lbl}</div>`;
-    }).join("");
-}
-
-function renderSummary(row) {
-  let ok=0, fail=0, pend=0;
-  KPIS.forEach(k => {
-    const {isPending,isOk} = kpiStatus(k,row);
-    if (isPending) pend++; else if (isOk) ok++; else fail++;
-  });
-  document.getElementById("summaryPills").innerHTML = `
-    <div class="pill pill-green">✅ ${ok} na meta</div>
-    <div class="pill pill-red">🔴 ${fail} fora</div>
-    <div class="pill pill-amber">⏳ ${pend} pendentes</div>`;
-}
-
-function renderHeader(row) {
-  const d = parseDate(row.date);
-  document.getElementById("hdrDate").textContent = row.date;
-  document.getElementById("hdrWeekday").textContent = WEEKDAYS[d.getDay()];
-}
-
-function renderMain(row) {
-  const people        = KPIS.filter(k=>k.section==="people");
-  const profitability = KPIS.filter(k=>k.section==="profitability");
-  const experience    = KPIS.filter(k=>k.section==="experience");
-
-  const peopleCards = people.map(k=>buildCard(k,row,"card-people")).join("");
-  const profCards   = profitability.map(k=>buildCard(k,row)).join("");
-  const expCards    = experience.map(k=>buildCard(k,row)).join("");
-
-  document.getElementById("main").innerHTML = `
-    <div class="section">
-      <div class="section-title">👥 People</div>
-      <div class="cards-row">${peopleCards}</div>
+  <div class="section">
+    <div class="section-title">Profitability</div>
+    <div class="cards-row">
+      <div class="card" id="card-lms">
+        <div class="card-badge" id="badge-lms"></div>
+        <div class="card-name">% Utilização LMS</div>
+        <div class="card-value" id="val-lms"></div>
+        <div class="card-meta">Meta: ≥ 80%</div>
+      </div>
+      <div class="card" id="card-cia">
+        <div class="card-badge" id="badge-cia"></div>
+        <div class="card-name">%CIA</div>
+        <div class="card-value" id="val-cia"></div>
+        <div class="card-meta">Meta: ≤ 5%</div>
+      </div>
+      <div class="card" id="card-coa">
+        <div class="card-badge" id="badge-coa"></div>
+        <div class="card-name">%COA</div>
+        <div class="card-value" id="val-coa"></div>
+        <div class="card-meta">Meta: ≤ 5%</div>
+      </div>
+      <div class="card" id="card-spr">
+        <div class="card-badge" id="badge-spr"></div>
+        <div class="card-name">SPR LM</div>
+        <div class="card-value" id="val-spr"></div>
+        <div class="card-meta">Meta: ≥ 67,58</div>
+      </div>
     </div>
-    <div class="section">
-      <div class="section-title">💰 Profitability</div>
-      <div class="cards-row">${profCards}</div>
-    </div>
-    <div class="section">
-      <div class="section-title">🚀 Experience</div>
-      <div class="cards-grid">${expCards}</div>
-    </div>`;
-}
+  </div>
 
-function pick(idx) {
-  sel = idx;
-  const row = HISTORY[idx];
-  renderChips();
-  renderHeader(row);
-  renderSummary(row);
-  renderMain(row);
-  const chips = document.querySelectorAll(".chip");
-  if (chips[idx]) chips[idx].scrollIntoView({inline:"center",behavior:"smooth"});
-}
-
-// ── INIT ──────────────────────────────────────────────────────────────────────
-renderChips();
-pick(sel);
-</script>
-</body>
-</html>
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 
+  <div class="section">
+    <div class="section-title">Experience</div>
+    <div class="cards-grid-4">
+      <div class="card" id="card-dit">
+        <div class="card-badge" id="badge-dit"></div>
+        <div class="card-name">DIT – Pacotes Acum. SVC</div>
+        <div class="card-value" id="val-dit"></div>
+        <div class="card-meta">Meta: &lt; 500 pcts</div>
+      </div>
+      <div class="card" id="card-delay">
+        <div class="card-badge" id="badge-delay"></div>
+        <div class="card-name">Delay (Cause SVC)</div>
+        <div class="card-value" id="val-delay"></div>
+        <div class="card-meta">Meta: ≤ 4%</div>
+      </div>
+      <div class="card" id="card-oot">
+        <div class="card-badge" id="badge-oot"></div>
+        <div class="card-name">OOT SVC (OpsClock 2.0)</div>
+        <div class="card-value" id="val-oot"></div>
+        <div class="card-meta">Meta: ≥ 85%</div>
+      </div>
+      <div class="card" id="card-tmc">
+        <div class="card-badge" id="badge-tmc"></div>
+        <div class="card-name">TMC (% Cumprimento Temp.)</div>
+        <div class="card-value" id="val-tmc"></div>
+        <div class="card-meta">Meta: ≥ 83%</div>
+      </div>
+      <div class="card" id="card-ds">
+        <div class="card-badge" id="badge-ds"></div>
+        <div class="card-name">Delivery Success</div>
+        <div class="card-value" id="val-ds"></div>
+        <div class="card-meta">Meta: ≥ 98,1%</div>
+      </div>
+      <div class="card" id="card-fech">
+        <div class="card-badge" id="badge-fech"></div>
+        <div class="card-name">Fechamento Automático</div>
+        <div class="card-value" id="val-fech"></div>
+        <div class="card-meta">Meta: ≥ 70%</div>
+      </div>
+      <div class="card" i
