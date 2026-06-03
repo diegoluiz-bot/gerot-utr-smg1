@@ -175,7 +175,7 @@
 
 <script>
 var HISTORICO = {
-  "02/06/2026": { abs:9.50,  lms:66.51, cia:5.39,  coa:6.50,  spr:53.78, delay:0.00,  tmc:67.23, ds:null,  fech:78.91, waves:74.73, dit:626, _previa:['abs','coa'] },
+  "02/06/2026": { abs:9.50,  lms:66.51, cia:5.39,  coa:6.50,  spr:53.78, delay:null,  tmc:67.23, ds:null,  fech:78.91, waves:74.73, dit:626, _previa:['abs','coa'] },
   "01/06/2026": { abs:9.89,  lms:82.24, cia:10.40, coa:6.49,  spr:65.58, delay:33.33, tmc:45.57, ds:95.35, fech:49.13, waves:60.95, dit:889 },
   "31/05/2026": { abs:16.98, lms:76.84, cia:15.38, coa:10.39, spr:80.39, delay:null,  tmc:45.77, ds:88.71, fech:58.67, waves:80.17, dit:741 }
 };
@@ -214,6 +214,8 @@ function renderDashboard() {
     var v = row[k];
     var isPrev = previa.indexOf(k) >= 0;
     card.className = 'card';
+    // Delay: null, undefined ou 0 = Pendente
+    if (k === 'delay' && (v === null || v === undefined || v === 0)) { v = null; }
     if (v === null || v === undefined) {
       card.classList.add('yellow');
       status.textContent = 'Pendente';
@@ -233,9 +235,3 @@ function renderDashboard() {
   }
   document.getElementById('badgeGreen').textContent   = 'Na Meta: '      + ok;
   document.getElementById('badgeRed').textContent     = 'Fora da Meta: ' + bad;
-  document.getElementById('badgePending').textContent = 'Pendente: '     + pend;
-}
-renderDashboard();
-</script>
-</body>
-</html>
