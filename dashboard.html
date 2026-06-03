@@ -31,7 +31,7 @@
   .card.red    { border-left-color: #c62828; background: #fff9f9; }
   .card.yellow { border-left-color: #e65100; background: #fffbf5; }
 
-  /* STATUS CHIP — canto superior direito */
+  /* STATUS CHIP */
   .card-status {
     position: absolute; top: 7px; right: 8px;
     font-size: 9px; font-weight: 800; letter-spacing: 0.5px;
@@ -41,7 +41,7 @@
   .card.red    .card-status { background: #c62828; color: #fff; }
   .card.yellow .card-status { background: #e65100; color: #fff; }
 
-  /* NOME DO INDICADOR — destaque */
+  /* NOME DO INDICADOR */
   .card-name {
     font-size: 11px; font-weight: 700; color: #222;
     margin-bottom: 4px; padding-right: 52px; line-height: 1.3;
@@ -57,6 +57,7 @@
   /* META */
   .card-meta  { font-size: 9px; color: #999; margin-top: 3px; font-weight: 500; }
   .no-data    { color: #bbb; font-size: 14px; font-weight: 600; }
+  .previa-tag { font-size: 9px; font-weight: 700; background: #FFE600; color: #333; border-radius: 3px; padding: 1px 4px; margin-left: 5px; vertical-align: middle; }
 </style>
 </head>
 <body>
@@ -72,6 +73,7 @@
   <div class="date-selector">
     <label>Data:</label>
     <select id="datePicker" onchange="renderDashboard()">
+      <option value="02/06/2026" selected>02/06/2026</option>
       <option value="01/06/2026">01/06/2026</option>
       <option value="31/05/2026">31/05/2026</option>
     </select>
@@ -173,6 +175,7 @@
 
 <script>
 var HISTORICO = {
+  "02/06/2026": { abs:9.50,  lms:66.51, cia:5.39,  coa:0.00,  spr:53.78, delay:0.00,  tmc:67.23, ds:null,  fech:78.91, waves:74.73, dit:626, _previa:['abs'] },
   "01/06/2026": { abs:9.89,  lms:82.24, cia:10.40, coa:6.49,  spr:65.58, delay:33.33, tmc:45.57, ds:95.35, fech:49.13, waves:60.95, dit:889 },
   "31/05/2026": { abs:16.98, lms:76.84, cia:15.38, coa:10.39, spr:80.39, delay:null,  tmc:45.77, ds:88.71, fech:58.67, waves:80.17, dit:741 }
 };
@@ -199,6 +202,7 @@ function renderDashboard() {
   var sel = document.getElementById('datePicker').value;
   var row = HISTORICO[sel];
   if (!row) return;
+  var previa = row._previa || [];
   var keys = ['abs','lms','cia','coa','spr','delay','tmc','ds','fech','waves','dit'];
   var ok = 0, bad = 0, pend = 0;
   for (var i = 0; i < keys.length; i++) {
@@ -208,6 +212,7 @@ function renderDashboard() {
     var status = document.getElementById('status-' + k);
     if (!card || !valEl || !status) continue;
     var v = row[k];
+    var isPrev = previa.indexOf(k) >= 0;
     card.className = 'card';
     if (v === null || v === undefined) {
       card.classList.add('yellow');
@@ -217,12 +222,12 @@ function renderDashboard() {
     } else if (METAS[k](v)) {
       card.classList.add('green');
       status.textContent = 'Na Meta';
-      valEl.innerHTML = fmt(k, v);
+      valEl.innerHTML = fmt(k, v) + (isPrev ? '<span class="previa-tag">(prévia)</span>' : '');
       ok++;
     } else {
       card.classList.add('red');
       status.textContent = 'Fora da Meta';
-      valEl.innerHTML = fmt(k, v);
+      valEl.innerHTML = fmt(k, v) + (isPrev ? '<span class="previa-tag">(prévia)</span>' : '');
       bad++;
     }
   }
