@@ -5,178 +5,160 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>GEROT UTR – SMG1 | Dashboard Diário</title>
 <style>
-  * { box-sizing: border-box; margin: 0; padding: 0; }
-  body { font-family: 'Segoe UI', Arial, sans-serif; background: #f5f5f5; font-size: 13px; }
-  .header { background: #FFE600; padding: 10px 18px; display: flex; align-items: center; gap: 14px; border-bottom: 3px solid #ccc; }
-  .header .logo { font-size: 22px; font-weight: 900; color: #333; letter-spacing: -1px; }
-  .header .title { flex: 1; }
-  .header .title h1 { font-size: 16px; font-weight: 800; color: #333; }
-  .header .title p { font-size: 11px; color: #555; }
-  .date-selector { display: flex; align-items: center; gap: 6px; }
-  .date-selector label { font-size: 11px; font-weight: 600; color: #333; }
-  .date-selector select { padding: 4px 8px; border: 1px solid #aaa; border-radius: 4px; font-size: 12px; background: white; cursor: pointer; }
-  .summary-bar { background: white; padding: 8px 18px; display: flex; gap: 20px; align-items: center; border-bottom: 1px solid #ddd; }
-  .summary-bar .counter { display: flex; align-items: center; gap: 6px; font-size: 12px; font-weight: 600; }
-  .badge { padding: 2px 10px; border-radius: 20px; font-size: 12px; font-weight: 700; color: white; }
-  .badge-green { background: #2e7d32; }
-  .badge-red { background: #c62828; }
-  .badge-orange { background: #e65100; }
-  .main { padding: 10px 18px; display: flex; flex-direction: column; gap: 10px; }
-  .section-title { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; color: #666; margin-bottom: 4px; }
-  .cards-row { display: flex; gap: 8px; }
-  .cards-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
-  .card { background: white; border-radius: 6px; padding: 8px 10px; position: relative; border-left: 4px solid #ccc; box-shadow: 0 1px 3px rgba(0,0,0,0.08); flex: 1; }
-  .card.meta { border-left-color: #2e7d32; }
-  .card.fora { border-left-color: #c62828; }
-  .card.pendente { border-left-color: #e65100; }
-  .card .chip { position: absolute; top: 6px; right: 8px; padding: 1px 7px; border-radius: 20px; font-size: 10px; font-weight: 700; color: white; }
-  .card.meta .chip { background: #2e7d32; }
-  .card.fora .chip { background: #c62828; }
-  .card.pendente .chip { background: #e65100; }
-  .card .kpi-name { font-size: 11px; font-weight: 700; color: #333; padding-right: 60px; }
-  .card .kpi-value { font-size: 22px; font-weight: 800; color: #222; line-height: 1.2; margin-top: 2px; }
-  .card.fora .kpi-value { color: #c62828; }
-  .card.meta .kpi-value { color: #2e7d32; }
-  .card.pendente .kpi-value { color: #e65100; }
-  .card .kpi-meta { font-size: 10px; color: #888; margin-top: 1px; }
-  .previa-tag { background: #FFE600; color: #333; border-radius: 3px; font-size: 9px; font-weight: 700; padding: 0 4px; margin-left: 4px; }
-  .card-full { flex: 1 1 100%; }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:'Segoe UI',Arial,sans-serif;background:#f5f5f5;font-size:13px}
+  header{background:#FFE600;padding:8px 16px;display:flex;align-items:center;justify-content:space-between;border-bottom:2px solid #e0c800}
+  .logo{font-size:22px;font-weight:900;color:#333;letter-spacing:-1px}
+  .logo span{color:#2196F3}
+  h1{font-size:15px;font-weight:700;color:#333}
+  .date-sel{display:flex;align-items:center;gap:6px;font-size:12px;font-weight:600}
+  .date-sel select{border:1.5px solid #ccc;border-radius:4px;padding:3px 6px;font-size:12px;background:#fff}
+  .summary{display:flex;gap:8px;padding:6px 16px;background:#fff;border-bottom:1px solid #ddd}
+  .sum-box{padding:4px 12px;border-radius:4px;font-weight:700;font-size:12px}
+  .sum-green{background:#e8f5e9;color:#2e7d32}
+  .sum-red{background:#ffebee;color:#c62828}
+  .sum-orange{background:#fff3e0;color:#e65100}
+  .sections{padding:8px 16px;display:flex;flex-direction:column;gap:8px}
+  .section-title{font-size:11px;font-weight:700;text-transform:uppercase;color:#666;margin-bottom:4px;letter-spacing:.5px}
+  .cards{display:flex;gap:8px;flex-wrap:wrap}
+  .card{background:#fff;border-radius:6px;border-left:4px solid #ccc;padding:8px 10px;flex:1;min-width:130px;position:relative;box-shadow:0 1px 3px rgba(0,0,0,.08)}
+  .card.green{border-left-color:#2e7d32}
+  .card.red{border-left-color:#c62828}
+  .card.orange{border-left-color:#e65100}
+  .card.full{flex:0 0 100%;max-width:100%}
+  .chip{position:absolute;top:6px;right:6px;font-size:9px;font-weight:700;padding:2px 5px;border-radius:3px}
+  .chip.green{background:#e8f5e9;color:#2e7d32}
+  .chip.red{background:#ffebee;color:#c62828}
+  .chip.orange{background:#fff3e0;color:#e65100}
+  .kpi-name{font-weight:700;font-size:11px;color:#333;margin-bottom:3px;padding-right:60px}
+  .kpi-value{font-size:20px;font-weight:900;color:#222;line-height:1}
+  .kpi-meta{font-size:10px;color:#888;margin-top:2px}
+  .preview-tag{background:#FFE600;color:#555;font-size:9px;font-weight:700;padding:1px 4px;border-radius:2px;margin-left:4px;vertical-align:middle}
+  .cards-4{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+  .cards-3{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+  .cards-1{display:grid;grid-template-columns:1fr;gap:8px}
+  @media(max-width:800px){.cards-4,.cards-3{grid-template-columns:repeat(2,1fr)}}
 </style>
 </head>
 <body>
-
-<div class="header">
-  <div class="logo">🟡 MELI</div>
-  <div class="title">
-    <h1>GEROT UTR – SMG1 | Dashboard Diário</h1>
-    <p id="subtitle-date">Carregando...</p>
+<header>
+  <div style="display:flex;align-items:center;gap:10px">
+    <div class="logo">ML<span>.</span></div>
+    <div>
+      <h1>GEROT UTR – SMG1 | Dashboard Diário</h1>
+      <div style="font-size:10px;color:#555">Gestão da Rotina · Site SMG1</div>
+    </div>
   </div>
-  <div class="date-selector">
-    <label>📅 Data:</label>
-    <select id="date-select" onchange="renderDashboard(this.value)"></select>
+  <div class="date-sel">
+    📅 Data:
+    <select id="dateSel" onchange="render()"></select>
   </div>
-</div>
+</header>
 
-<div class="summary-bar">
-  <span style="font-size:12px;font-weight:700;color:#555;">RESUMO:</span>
-  <div class="counter"><span class="badge badge-green" id="cnt-meta">—</span> Na Meta</div>
-  <div class="counter"><span class="badge badge-red" id="cnt-fora">—</span> Fora da Meta</div>
-  <div class="counter"><span class="badge badge-orange" id="cnt-pendente">—</span> Pendente</div>
-  <span style="margin-left:auto;font-size:10px;color:#aaa;" id="update-time"></span>
-</div>
+<div class="summary" id="summary"></div>
 
-<div class="main" id="dashboard-body"></div>
+<div class="sections" id="sections"></div>
 
 <script>
 const HISTORICO = {
-  "31/05/2026": { abs: 16.98, lms: 76.84, cia: 15.38, coa: 10.39, spr: 80.39, delay: null, tmc: 45.77, ds: 88.71, fag: 58.67, oot: 80.17, dit: 741, previas: [] },
-  "01/06/2026": { abs: 9.89, lms: 82.24, cia: 10.40, coa: 6.49, spr: 65.58, delay: 33.33, tmc: 45.57, ds: 95.35, fag: 49.13, oot: 60.95, dit: 889, previas: [] },
-  "02/06/2026": { abs: 9.50, lms: 66.51, cia: 5.39, coa: 6.5, spr: 53.78, delay: 3.86, tmc: 67.23, ds: null, fag: 78.91, oot: 74.33, dit: 626, previas: [] },
-  "03/06/2026": { abs: 10.65, lms: 82.76, cia: 3.21, coa: 3.74, spr: 64.62, delay: 3.86, tmc: 57.35, ds: 95.25, fag: 81.01, oot: 77.75, dit: null, previas: ["abs"] }
+  "31/05/2026": {abs:16.98,lms:76.84,cia:15.38,coa:10.39,spr:80.39,delay:null,tmc:45.77,ds:88.71,fag:58.67,oot:80.17,dit:741},
+  "01/06/2026": {abs:9.89,lms:82.24,cia:10.40,coa:6.49,spr:65.58,delay:33.33,tmc:45.57,ds:95.35,fag:49.13,oot:60.95,dit:889},
+  "02/06/2026": {abs:9.50,lms:66.51,cia:5.39,coa:6.50,spr:53.78,delay:3.86,tmc:67.23,ds:null,fag:78.91,oot:74.33,dit:626},
+  "03/06/2026": {abs:10.65,lms:83.74,cia:12.50,coa:3.59,spr:64.62,delay:3.86,tmc:57.35,ds:95.25,fag:81.01,oot:77.75,dit:null}
+};
+
+// Flags: which KPIs use "prévia" tag for each date
+const PREVIA = {
+  "03/06/2026": {abs:true}
 };
 
 const METAS = {
-  abs: { label: "Absenteísmo Absoluto", min: null, max: 4, unit: "%", section: "People", metaLabel: "Meta ≤ 4%" },
-  lms: { label: "% Utilização LMS", min: 80, max: null, unit: "%", section: "Profitability", metaLabel: "Meta ≥ 80%" },
-  cia: { label: "%CIA", min: null, max: 5, unit: "%", section: "Profitability", metaLabel: "Meta ≤ 5%" },
-  coa: { label: "%COA", min: null, max: 5, unit: "%", section: "Profitability", metaLabel: "Meta ≤ 5%" },
-  spr: { label: "SPR LM", min: 67.58, max: null, unit: "", section: "Profitability", metaLabel: "Meta ≥ 67,58" },
-  dit: { label: "DIT – Pacotes Acum. SVC", min: null, max: 500, unit: " pcts", section: "Experience", metaLabel: "Meta < 500 pcts" },
-  delay: { label: "Delay (Cause SVC)", min: null, max: 4, unit: "%", section: "Experience", metaLabel: "Meta ≤ 4%" },
-  tmc: { label: "TMC (% Cumprimento Temp.)", min: 83, max: null, unit: "%", section: "Experience", metaLabel: "Meta ≥ 83%" },
-  ds: { label: "Delivery Success", min: 98.1, max: null, unit: "%", section: "Experience", metaLabel: "Meta ≥ 98,1%", noFallback: true },
-  fag: { label: "Fechamento Automático", min: 70, max: null, unit: "%", section: "Experience", metaLabel: "Meta ≥ 70%" },
-  oot: { label: "OOT Waves 3.0", min: 85, max: null, unit: "%", section: "Experience", metaLabel: "Meta ≥ 85%" }
+  abs:  {label:"Absenteísmo Absoluto", meta:"≤ 4%",  ok: v => v <= 4,         fmt: v => v.toFixed(2)+"%", section:"People"},
+  lms:  {label:"% Utilização LMS",    meta:"≥ 80%", ok: v => v >= 80,        fmt: v => v.toFixed(2)+"%", section:"Profitability"},
+  cia:  {label:"%CIA",                meta:"≤ 5%",  ok: v => v <= 5,         fmt: v => v.toFixed(2)+"%", section:"Profitability"},
+  coa:  {label:"%COA",                meta:"≤ 5%",  ok: v => v <= 5,         fmt: v => v.toFixed(2)+"%", section:"Profitability"},
+  spr:  {label:"SPR LM",              meta:"≥ 67,58",ok: v => v >= 67.58,    fmt: v => v.toFixed(2),     section:"Profitability"},
+  dit:  {label:"DIT – Pcts Acum. SVC",meta:"< 500 pcts",ok: v => v < 500,   fmt: v => v.toFixed(0)+" pcts",section:"Experience"},
+  delay:{label:"Delay (Cause SVC)",   meta:"≤ 4%",  ok: v => v > 0 && v <= 4,fmt: v => v.toFixed(2)+"%", section:"Experience"},
+  tmc:  {label:"TMC (% Cump. Temp.)", meta:"≥ 83%", ok: v => v >= 83,        fmt: v => v.toFixed(2)+"%", section:"Experience"},
+  ds:   {label:"Delivery Success",    meta:"≥ 98,1%",ok: v => v >= 98.1,    fmt: v => v.toFixed(2)+"%", section:"Experience"},
+  fag:  {label:"Fechamento Automático",meta:"≥ 70%", ok: v => v >= 70,       fmt: v => v.toFixed(2)+"%", section:"Experience"},
+  oot:  {label:"OOT Waves 3.0",       meta:"≥ 85%", ok: v => v >= 85,        fmt: v => v.toFixed(2)+"%", section:"Experience"}
 };
 
-function getStatus(key, value) {
-  if (value === null || value === undefined) return "pendente";
-  if (key === "delay" && value === 0) return "pendente";
-  const m = METAS[key];
-  if (m.min !== null && value < m.min) return "fora";
-  if (m.max !== null && value > m.max) return "fora";
-  return "meta";
+const ORDER = {
+  People:        ["abs"],
+  Profitability: ["lms","cia","coa","spr"],
+  Experience:    ["dit","delay","tmc","ds","fag","oot"]
+};
+
+function getStatus(key, val, date) {
+  if(key === "delay" && (val === null || val === 0)) return "pending";
+  if(key === "ds" && val === null) return "pending";
+  if(val === null || val === undefined) return "pending";
+  return METAS[key].ok(val) ? "ok" : "bad";
 }
 
-function formatValue(key, value, isPrev) {
-  if (value === null || value === undefined || (key === "delay" && value === 0)) return "Pendente";
-  const m = METAS[key];
-  let v = key === "dit" ? value.toLocaleString('pt-BR') : value.toFixed(2).replace('.', ',');
-  let tag = (isPrev && key !== "dit" && key !== "delay") ? '<span class="previa-tag">(prévia)</span>' : '';
-  return v + m.unit + tag;
-}
+function render() {
+  const sel = document.getElementById("dateSel");
+  const date = sel.value;
+  const d = HISTORICO[date] || {};
+  const prev = PREVIA[date] || {};
 
-function renderDashboard(date) {
-  const d = HISTORICO[date];
-  if (!d) return;
-  document.getElementById('subtitle-date').textContent = `Referência: ${date}`;
-  document.getElementById('update-time').textContent = `Atualizado: ${new Date().toLocaleString('pt-BR')}`;
-
-  let metaCount = 0, foraCount = 0, pendCount = 0;
-  const order = ["abs","lms","cia","coa","spr","dit","delay","tmc","ds","fag","oot"];
-  order.forEach(k => {
-    let val = d[k];
-    if (k === "delay" && val === 0) val = null;
-    const st = getStatus(k, val);
-    if (st === "meta") metaCount++;
-    else if (st === "fora") foraCount++;
-    else pendCount++;
+  let ok=0, bad=0, pend=0;
+  Object.keys(METAS).forEach(k => {
+    const s = getStatus(k, d[k], date);
+    if(s==="ok") ok++;
+    else if(s==="bad") bad++;
+    else pend++;
   });
 
-  document.getElementById('cnt-meta').textContent = metaCount;
-  document.getElementById('cnt-fora').textContent = foraCount;
-  document.getElementById('cnt-pendente').textContent = pendCount;
-
-  function makeCard(key, fullWidth) {
-    let val = d[key];
-    if (key === "delay" && val === 0) val = null;
-    const isPrev = d.previas && d.previas.includes(key);
-    const st = getStatus(key, val);
-    const m = METAS[key];
-    const chipLabel = st === "meta" ? "Na Meta" : st === "fora" ? "Fora da Meta" : "Pendente";
-    const dispVal = formatValue(key, val, isPrev);
-    const cls = `card ${st}${fullWidth ? " card-full" : ""}`;
-    return `<div class="${cls}">
-      <div class="chip">${chipLabel}</div>
-      <div class="kpi-name">${m.label}</div>
-      <div class="kpi-value">${dispVal}</div>
-      <div class="kpi-meta">${m.metaLabel}</div>
-    </div>`;
-  }
-
-  const body = document.getElementById('dashboard-body');
-  body.innerHTML = `
-    <div>
-      <div class="section-title">👥 People</div>
-      <div class="cards-row">${makeCard("abs", true)}</div>
-    </div>
-    <div>
-      <div class="section-title">💰 Profitability</div>
-      <div class="cards-row">
-        ${makeCard("lms")}${makeCard("cia")}${makeCard("coa")}${makeCard("spr")}
-      </div>
-    </div>
-    <div>
-      <div class="section-title">⭐ Experience</div>
-      <div class="cards-grid">
-        ${makeCard("dit")}${makeCard("delay")}${makeCard("tmc")}
-        ${makeCard("ds")}${makeCard("fag")}${makeCard("oot")}
-      </div>
-    </div>
+  document.getElementById("summary").innerHTML = `
+    <div class="sum-box sum-green">✅ Na Meta: ${ok}</div>
+    <div class="sum-box sum-red">❌ Fora da Meta: ${bad}</div>
+    <div class="sum-box sum-orange">⏳ Pendente: ${pend}</div>
+    <div style="margin-left:auto;font-size:11px;color:#888;align-self:center">Referência: ${date} &nbsp;|&nbsp; SMG1</div>
   `;
+
+  let html = "";
+  ["People","Profitability","Experience"].forEach(sec => {
+    const keys = ORDER[sec];
+    const gridClass = sec==="People"?"cards-1": sec==="Profitability"?"cards-4":"cards-3";
+    html += `<div><div class="section-title">${sec}</div><div class="${gridClass}">`;
+    keys.forEach(k => {
+      const m = METAS[k];
+      const val = d[k];
+      const st = getStatus(k, val, date);
+      const cls = st==="ok"?"green": st==="bad"?"red":"orange";
+      const chipTxt = st==="ok"?"Na Meta": st==="bad"?"Fora da Meta":"Pendente";
+      let dispVal = "Pendente";
+      if(st !== "pending") dispVal = m.fmt(val);
+      const previaTag = prev[k] && st!=="pending" ? '<span class="preview-tag">prévia</span>' : "";
+      html += `<div class="card ${cls}">
+        <span class="chip ${cls}">${chipTxt}</span>
+        <div class="kpi-name">${m.label}</div>
+        <div class="kpi-value">${dispVal}${previaTag}</div>
+        <div class="kpi-meta">Meta: ${m.meta}</div>
+      </div>`;
+    });
+    html += `</div></div>`;
+  });
+
+  document.getElementById("sections").innerHTML = html;
 }
 
 // Populate date selector
-const select = document.getElementById('date-select');
-const dates = Object.keys(HISTORICO).reverse();
-dates.forEach(d => {
-  const opt = document.createElement('option');
-  opt.value = d;
-  opt.textContent = d;
-  select.appendChild(opt);
-});
-select.value = dates[0];
-renderDashboard(dates[0]);
+(function(){
+  const sel = document.getElementById("dateSel");
+  const dates = Object.keys(HISTORICO).reverse();
+  dates.forEach(d => {
+    const opt = document.createElement("option");
+    opt.value = d; opt.text = d;
+    sel.appendChild(opt);
+  });
+  sel.value = "03/06/2026";
+  render();
+})();
 </script>
 </body>
 </html>
