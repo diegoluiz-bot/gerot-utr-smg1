@@ -3,172 +3,180 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>GEROT UTR – Dashboard Diário SMG1</title>
+<title>GEROT UTR – SMG1 | Dashboard Diário</title>
 <style>
   * { box-sizing: border-box; margin: 0; padding: 0; }
-  body { font-family: 'Segoe UI', Arial, sans-serif; background: #f5f5f5; min-height: 100vh; display: flex; flex-direction: column; }
-  header { background: #FFE600; padding: 10px 20px; display: flex; align-items: center; gap: 16px; border-bottom: 3px solid #333; }
-  .logo { width: 40px; height: 40px; background: #333; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: #FFE600; font-weight: bold; font-size: 14px; flex-shrink: 0; }
-  .header-title { flex: 1; }
-  .header-title h1 { font-size: 18px; font-weight: 800; color: #333; }
-  .header-title p { font-size: 12px; color: #555; }
-  .date-selector { display: flex; align-items: center; gap: 8px; }
-  .date-selector label { font-size: 12px; font-weight: 600; color: #333; }
-  .date-selector select { padding: 4px 8px; border: 2px solid #333; border-radius: 4px; font-size: 12px; background: white; cursor: pointer; }
-  .summary-bar { background: #333; color: white; padding: 8px 20px; display: flex; gap: 20px; align-items: center; }
-  .summary-bar span { font-size: 12px; }
-  .badge { display: inline-block; padding: 2px 10px; border-radius: 12px; font-weight: 700; font-size: 12px; margin-left: 4px; }
-  .badge-green { background: #2e7d32; color: white; }
-  .badge-red { background: #c62828; color: white; }
-  .badge-orange { background: #e65100; color: white; }
-  .main { padding: 12px 20px; flex: 1; }
-  .section { margin-bottom: 12px; }
-  .section-title { font-size: 11px; font-weight: 800; text-transform: uppercase; letter-spacing: 1px; color: #555; margin-bottom: 6px; padding-left: 4px; border-left: 3px solid #FFE600; }
-  .cards-row { display: flex; gap: 8px; flex-wrap: wrap; }
-  .card { background: white; border-radius: 6px; padding: 10px 12px; flex: 1; min-width: 140px; border-left: 4px solid #ccc; position: relative; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
+  body { font-family: 'Segoe UI', Arial, sans-serif; background: #f5f5f5; font-size: 13px; }
+  .header { background: #FFE600; padding: 10px 18px; display: flex; align-items: center; gap: 14px; border-bottom: 3px solid #ccc; }
+  .header .logo { font-size: 22px; font-weight: 900; color: #333; letter-spacing: -1px; }
+  .header .title { flex: 1; }
+  .header .title h1 { font-size: 16px; font-weight: 800; color: #333; }
+  .header .title p { font-size: 11px; color: #555; }
+  .date-selector { display: flex; align-items: center; gap: 6px; }
+  .date-selector label { font-size: 11px; font-weight: 600; color: #333; }
+  .date-selector select { padding: 4px 8px; border: 1px solid #aaa; border-radius: 4px; font-size: 12px; background: white; cursor: pointer; }
+  .summary-bar { background: white; padding: 8px 18px; display: flex; gap: 20px; align-items: center; border-bottom: 1px solid #ddd; }
+  .summary-bar .counter { display: flex; align-items: center; gap: 6px; font-size: 12px; font-weight: 600; }
+  .badge { padding: 2px 10px; border-radius: 20px; font-size: 12px; font-weight: 700; color: white; }
+  .badge-green { background: #2e7d32; }
+  .badge-red { background: #c62828; }
+  .badge-orange { background: #e65100; }
+  .main { padding: 10px 18px; display: flex; flex-direction: column; gap: 10px; }
+  .section-title { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; color: #666; margin-bottom: 4px; }
+  .cards-row { display: flex; gap: 8px; }
+  .cards-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+  .card { background: white; border-radius: 6px; padding: 8px 10px; position: relative; border-left: 4px solid #ccc; box-shadow: 0 1px 3px rgba(0,0,0,0.08); flex: 1; }
   .card.meta { border-left-color: #2e7d32; }
   .card.fora { border-left-color: #c62828; }
   .card.pendente { border-left-color: #e65100; }
-  .card-status { position: absolute; top: 8px; right: 8px; font-size: 9px; font-weight: 700; padding: 2px 6px; border-radius: 10px; }
-  .card.meta .card-status { background: #e8f5e9; color: #2e7d32; }
-  .card.fora .card-status { background: #ffebee; color: #c62828; }
-  .card.pendente .card-status { background: #fff3e0; color: #e65100; }
-  .card-name { font-size: 11px; font-weight: 700; color: #333; margin-bottom: 4px; padding-right: 60px; line-height: 1.3; }
-  .card-value { font-size: 22px; font-weight: 800; color: #222; line-height: 1; }
-  .card-value.pending-val { font-size: 16px; color: #e65100; }
-  .card-meta { font-size: 10px; color: #777; margin-top: 3px; }
-  .previa-tag { background: #FFE600; color: #333; font-size: 9px; font-weight: 700; padding: 1px 5px; border-radius: 3px; margin-left: 4px; vertical-align: middle; }
-  .cards-grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
-  footer { text-align: center; padding: 6px; font-size: 10px; color: #999; border-top: 1px solid #ddd; background: white; }
+  .card .chip { position: absolute; top: 6px; right: 8px; padding: 1px 7px; border-radius: 20px; font-size: 10px; font-weight: 700; color: white; }
+  .card.meta .chip { background: #2e7d32; }
+  .card.fora .chip { background: #c62828; }
+  .card.pendente .chip { background: #e65100; }
+  .card .kpi-name { font-size: 11px; font-weight: 700; color: #333; padding-right: 60px; }
+  .card .kpi-value { font-size: 22px; font-weight: 800; color: #222; line-height: 1.2; margin-top: 2px; }
+  .card.fora .kpi-value { color: #c62828; }
+  .card.meta .kpi-value { color: #2e7d32; }
+  .card.pendente .kpi-value { color: #e65100; }
+  .card .kpi-meta { font-size: 10px; color: #888; margin-top: 1px; }
+  .previa-tag { background: #FFE600; color: #333; border-radius: 3px; font-size: 9px; font-weight: 700; padding: 0 4px; margin-left: 4px; }
+  .card-full { flex: 1 1 100%; }
 </style>
 </head>
 <body>
 
-<header>
-  <div class="logo">ML</div>
-  <div class="header-title">
-    <h1>🟡 GEROT UTR – Dashboard Diário · SMG1</h1>
-    <p id="subtitle">Carregando...</p>
+<div class="header">
+  <div class="logo">🟡 MELI</div>
+  <div class="title">
+    <h1>GEROT UTR – SMG1 | Dashboard Diário</h1>
+    <p id="subtitle-date">Carregando...</p>
   </div>
   <div class="date-selector">
-    <label>Data:</label>
-    <select id="datePicker" onchange="renderDate(this.value)"></select>
+    <label>📅 Data:</label>
+    <select id="date-select" onchange="renderDashboard(this.value)"></select>
   </div>
-</header>
-
-<div class="summary-bar">
-  <span>Resumo: </span>
-  <span>Na Meta <span class="badge badge-green" id="count-meta">–</span></span>
-  <span>Fora da Meta <span class="badge badge-red" id="count-fora">–</span></span>
-  <span>Pendente <span class="badge badge-orange" id="count-pend">–</span></span>
 </div>
 
-<div class="main" id="mainContent"></div>
+<div class="summary-bar">
+  <span style="font-size:12px;font-weight:700;color:#555;">RESUMO:</span>
+  <div class="counter"><span class="badge badge-green" id="cnt-meta">—</span> Na Meta</div>
+  <div class="counter"><span class="badge badge-red" id="cnt-fora">—</span> Fora da Meta</div>
+  <div class="counter"><span class="badge badge-orange" id="cnt-pendente">—</span> Pendente</div>
+  <span style="margin-left:auto;font-size:10px;color:#aaa;" id="update-time"></span>
+</div>
 
-<footer>GEROT UTR SMG1 · Atualizado automaticamente · MercadoLivre Shipping</footer>
+<div class="main" id="dashboard-body"></div>
 
 <script>
 const HISTORICO = {
-  "31/05/2026": { abs: 16.98, lms: 76.84, cia: 15.38, coa: 10.39, spr: 80.39, delay: null, tmc: 45.77, delivery: 88.71, fechamento: 58.67, oot: 80.17, dit: 741 },
-  "01/06/2026": { abs: 9.89,  lms: 82.24, cia: 10.40, coa: 6.49,  spr: 65.58, delay: 33.33, tmc: 45.57, delivery: 95.35, fechamento: 49.13, oot: 60.95, dit: 889 },
-  "02/06/2026": { abs: 9.50,  lms: 66.51, cia: 5.39,  coa: 6.5,   spr: 53.78, delay: 3.86,  tmc: 67.23, delivery: null,  fechamento: 78.91, oot: 74.33, dit: 626 },
-  "03/06/2026": { abs: 10.65, absPrevia: true, lms: 82.76, cia: 3.21, coa: 3.74, spr: 64.62, delay: null, tmc: 57.35, delivery: 95.25, fechamento: 81.01, oot: 77.75, dit: null }
+  "31/05/2026": { abs: 16.98, lms: 76.84, cia: 15.38, coa: 10.39, spr: 80.39, delay: null, tmc: 45.77, ds: 88.71, fag: 58.67, oot: 80.17, dit: 741, previas: [] },
+  "01/06/2026": { abs: 9.89, lms: 82.24, cia: 10.40, coa: 6.49, spr: 65.58, delay: 33.33, tmc: 45.57, ds: 95.35, fag: 49.13, oot: 60.95, dit: 889, previas: [] },
+  "02/06/2026": { abs: 9.50, lms: 66.51, cia: 5.39, coa: 6.5, spr: 53.78, delay: 3.86, tmc: 67.23, ds: null, fag: 78.91, oot: 74.33, dit: 626, previas: [] },
+  "03/06/2026": { abs: 10.65, lms: 82.76, cia: 3.21, coa: 3.74, spr: 64.62, delay: 3.86, tmc: 57.35, ds: 95.25, fag: 81.01, oot: 77.75, dit: null, previas: ["abs"] }
 };
 
 const METAS = {
-  abs:       { label: 'Absenteísmo Absoluto',     meta: '≤ 4%',   ok: v => v <= 4,    fmt: v => v.toFixed(2) + '%',  section: 'people' },
-  lms:       { label: '% Utilização LMS',          meta: '≥ 80%',  ok: v => v >= 80,   fmt: v => v.toFixed(2) + '%',  section: 'profit' },
-  cia:       { label: '%CIA',                       meta: '≤ 5%',   ok: v => v <= 5,    fmt: v => v.toFixed(2) + '%',  section: 'profit' },
-  coa:       { label: '%COA',                       meta: '≤ 5%',   ok: v => v <= 5,    fmt: v => v.toFixed(2) + '%',  section: 'profit' },
-  spr:       { label: 'SPR LM',                    meta: '≥ 67,58',ok: v => v >= 67.58,fmt: v => v.toFixed(2),        section: 'profit' },
-  dit:       { label: 'DIT – Pacotes Acum. SVC',   meta: '< 500',  ok: v => v < 500,   fmt: v => v.toLocaleString('pt-BR') + ' pcts', section: 'exp' },
-  delay:     { label: 'Delay (Cause SVC)',          meta: '≤ 4%',   ok: v => v <= 4,    fmt: v => v.toFixed(2) + '%',  section: 'exp' },
-  tmc:       { label: 'TMC (% Cumprimento Temp.)', meta: '≥ 83%',  ok: v => v >= 83,   fmt: v => v.toFixed(2) + '%',  section: 'exp' },
-  delivery:  { label: 'Delivery Success',           meta: '≥ 98,1%',ok: v => v >= 98.1, fmt: v => v.toFixed(2) + '%',  section: 'exp' },
-  fechamento:{ label: 'Fechamento Automático',      meta: '≥ 70%',  ok: v => v >= 70,   fmt: v => v.toFixed(2) + '%',  section: 'exp' },
-  oot:       { label: 'OOT Waves 3.0',             meta: '≥ 85%',  ok: v => v >= 85,   fmt: v => v.toFixed(2) + '%',  section: 'exp' }
+  abs: { label: "Absenteísmo Absoluto", min: null, max: 4, unit: "%", section: "People", metaLabel: "Meta ≤ 4%" },
+  lms: { label: "% Utilização LMS", min: 80, max: null, unit: "%", section: "Profitability", metaLabel: "Meta ≥ 80%" },
+  cia: { label: "%CIA", min: null, max: 5, unit: "%", section: "Profitability", metaLabel: "Meta ≤ 5%" },
+  coa: { label: "%COA", min: null, max: 5, unit: "%", section: "Profitability", metaLabel: "Meta ≤ 5%" },
+  spr: { label: "SPR LM", min: 67.58, max: null, unit: "", section: "Profitability", metaLabel: "Meta ≥ 67,58" },
+  dit: { label: "DIT – Pacotes Acum. SVC", min: null, max: 500, unit: " pcts", section: "Experience", metaLabel: "Meta < 500 pcts" },
+  delay: { label: "Delay (Cause SVC)", min: null, max: 4, unit: "%", section: "Experience", metaLabel: "Meta ≤ 4%" },
+  tmc: { label: "TMC (% Cumprimento Temp.)", min: 83, max: null, unit: "%", section: "Experience", metaLabel: "Meta ≥ 83%" },
+  ds: { label: "Delivery Success", min: 98.1, max: null, unit: "%", section: "Experience", metaLabel: "Meta ≥ 98,1%", noFallback: true },
+  fag: { label: "Fechamento Automático", min: 70, max: null, unit: "%", section: "Experience", metaLabel: "Meta ≥ 70%" },
+  oot: { label: "OOT Waves 3.0", min: 85, max: null, unit: "%", section: "Experience", metaLabel: "Meta ≥ 85%" }
 };
 
-function makeCard(key, val, isPrevia) {
+function getStatus(key, value) {
+  if (value === null || value === undefined) return "pendente";
+  if (key === "delay" && value === 0) return "pendente";
   const m = METAS[key];
-  // delay: treat 0 as null
-  const effectiveVal = (key === 'delay' && val === 0) ? null : val;
-  let statusClass, statusLabel, valueHtml;
-  if (effectiveVal === null || effectiveVal === undefined) {
-    statusClass = 'pendente'; statusLabel = 'Pendente';
-    valueHtml = '<div class="card-value pending-val">Pendente</div>';
-  } else if (m.ok(effectiveVal)) {
-    statusClass = 'meta'; statusLabel = 'Na Meta';
-    const previaTag = isPrevia && key !== 'dit' && key !== 'delay' ? '<span class="previa-tag">prévia</span>' : '';
-    valueHtml = `<div class="card-value">${m.fmt(effectiveVal)}${previaTag}</div>`;
-  } else {
-    statusClass = 'fora'; statusLabel = 'Fora da Meta';
-    const previaTag = isPrevia && key !== 'dit' && key !== 'delay' ? '<span class="previa-tag">prévia</span>' : '';
-    valueHtml = `<div class="card-value">${m.fmt(effectiveVal)}${previaTag}</div>`;
-  }
-  return `<div class="card ${statusClass}">
-    <span class="card-status">${statusLabel}</span>
-    <div class="card-name">${m.label}</div>
-    ${valueHtml}
-    <div class="card-meta">Meta: ${m.meta}</div>
-  </div>`;
+  if (m.min !== null && value < m.min) return "fora";
+  if (m.max !== null && value > m.max) return "fora";
+  return "meta";
 }
 
-function renderDate(dateStr) {
-  const d = HISTORICO[dateStr];
-  if (!d) return;
-  document.getElementById('subtitle').textContent = `Site: SMG1 · Referência: ${dateStr}`;
-  
-  const keys = ['abs','lms','cia','coa','spr','dit','delay','tmc','delivery','fechamento','oot'];
-  let meta = 0, fora = 0, pend = 0;
-  keys.forEach(k => {
-    const v = (k === 'delay' && d[k] === 0) ? null : d[k];
-    if (v === null || v === undefined) pend++;
-    else if (METAS[k].ok(v)) meta++;
-    else fora++;
-  });
-  document.getElementById('count-meta').textContent = meta;
-  document.getElementById('count-fora').textContent = fora;
-  document.getElementById('count-pend').textContent = pend;
+function formatValue(key, value, isPrev) {
+  if (value === null || value === undefined || (key === "delay" && value === 0)) return "Pendente";
+  const m = METAS[key];
+  let v = key === "dit" ? value.toLocaleString('pt-BR') : value.toFixed(2).replace('.', ',');
+  let tag = (isPrev && key !== "dit" && key !== "delay") ? '<span class="previa-tag">(prévia)</span>' : '';
+  return v + m.unit + tag;
+}
 
-  const html = `
-    <div class="section">
+function renderDashboard(date) {
+  const d = HISTORICO[date];
+  if (!d) return;
+  document.getElementById('subtitle-date').textContent = `Referência: ${date}`;
+  document.getElementById('update-time').textContent = `Atualizado: ${new Date().toLocaleString('pt-BR')}`;
+
+  let metaCount = 0, foraCount = 0, pendCount = 0;
+  const order = ["abs","lms","cia","coa","spr","dit","delay","tmc","ds","fag","oot"];
+  order.forEach(k => {
+    let val = d[k];
+    if (k === "delay" && val === 0) val = null;
+    const st = getStatus(k, val);
+    if (st === "meta") metaCount++;
+    else if (st === "fora") foraCount++;
+    else pendCount++;
+  });
+
+  document.getElementById('cnt-meta').textContent = metaCount;
+  document.getElementById('cnt-fora').textContent = foraCount;
+  document.getElementById('cnt-pendente').textContent = pendCount;
+
+  function makeCard(key, fullWidth) {
+    let val = d[key];
+    if (key === "delay" && val === 0) val = null;
+    const isPrev = d.previas && d.previas.includes(key);
+    const st = getStatus(key, val);
+    const m = METAS[key];
+    const chipLabel = st === "meta" ? "Na Meta" : st === "fora" ? "Fora da Meta" : "Pendente";
+    const dispVal = formatValue(key, val, isPrev);
+    const cls = `card ${st}${fullWidth ? " card-full" : ""}`;
+    return `<div class="${cls}">
+      <div class="chip">${chipLabel}</div>
+      <div class="kpi-name">${m.label}</div>
+      <div class="kpi-value">${dispVal}</div>
+      <div class="kpi-meta">${m.metaLabel}</div>
+    </div>`;
+  }
+
+  const body = document.getElementById('dashboard-body');
+  body.innerHTML = `
+    <div>
       <div class="section-title">👥 People</div>
-      <div class="cards-row">${makeCard('abs', d.abs, d.absPrevia)}</div>
+      <div class="cards-row">${makeCard("abs", true)}</div>
     </div>
-    <div class="section">
+    <div>
       <div class="section-title">💰 Profitability</div>
       <div class="cards-row">
-        ${makeCard('lms', d.lms, false)}
-        ${makeCard('cia', d.cia, false)}
-        ${makeCard('coa', d.coa, false)}
-        ${makeCard('spr', d.spr, false)}
+        ${makeCard("lms")}${makeCard("cia")}${makeCard("coa")}${makeCard("spr")}
       </div>
     </div>
-    <div class="section">
+    <div>
       <div class="section-title">⭐ Experience</div>
-      <div class="cards-grid-3">
-        ${makeCard('dit', d.dit, false)}
-        ${makeCard('delay', d.delay, false)}
-        ${makeCard('tmc', d.tmc, false)}
-        ${makeCard('delivery', d.delivery, false)}
-        ${makeCard('fechamento', d.fechamento, false)}
-        ${makeCard('oot', d.oot, false)}
+      <div class="cards-grid">
+        ${makeCard("dit")}${makeCard("delay")}${makeCard("tmc")}
+        ${makeCard("ds")}${makeCard("fag")}${makeCard("oot")}
       </div>
-    </div>`;
-  document.getElementById('mainContent').innerHTML = html;
+    </div>
+  `;
 }
 
-// Populate date picker
-const picker = document.getElementById('datePicker');
+// Populate date selector
+const select = document.getElementById('date-select');
 const dates = Object.keys(HISTORICO).reverse();
 dates.forEach(d => {
   const opt = document.createElement('option');
-  opt.value = d; opt.textContent = d;
-  picker.appendChild(opt);
+  opt.value = d;
+  opt.textContent = d;
+  select.appendChild(opt);
 });
-picker.value = dates[0];
-renderDate(dates[0]);
+select.value = dates[0];
+renderDashboard(dates[0]);
 </script>
 </body>
 </html>
