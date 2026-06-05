@@ -64,10 +64,10 @@ const HISTORICO = {
   "31/05/2026": {abs:16.98,lms:76.84,cia:15.38,coa:10.39,spr:80.39,delay:null,tmc:45.77,ds:88.71,fag:58.67,oot:80.17,dit:741},
   "01/06/2026": {abs:9.89,lms:82.24,cia:10.40,coa:6.49,spr:65.58,delay:33.33,tmc:45.57,ds:95.35,fag:49.13,oot:60.95,dit:889},
   "02/06/2026": {abs:9.50,lms:66.51,cia:5.39,coa:6.50,spr:53.78,delay:3.86,tmc:67.23,ds:null,fag:78.91,oot:74.33,dit:626},
-  "03/06/2026": {abs:10.65,lms:83.74,cia:12.50,coa:3.59,spr:64.62,delay:3.86,tmc:57.35,ds:95.25,fag:81.01,oot:77.75,dit:null}
+  "03/06/2026": {abs:10.65,lms:83.74,cia:12.50,coa:3.59,spr:64.62,delay:3.86,tmc:57.35,ds:95.25,fag:81.01,oot:77.75,dit:null},
+  "04/06/2026": {abs:null,lms:null,cia:null,coa:null,spr:null,delay:null,tmc:null,ds:null,fag:null,oot:null,dit:null}
 };
 
-// Flags: which KPIs use "prévia" tag for each date
 const PREVIA = {
   "03/06/2026": {abs:true}
 };
@@ -147,7 +147,6 @@ function render() {
   document.getElementById("sections").innerHTML = html;
 }
 
-// Populate date selector
 (function(){
   const sel = document.getElementById("dateSel");
   const dates = Object.keys(HISTORICO).reverse();
@@ -156,7 +155,7 @@ function render() {
     opt.value = d; opt.text = d;
     sel.appendChild(opt);
   });
-  sel.value = "03/06/2026";
+  sel.value = "04/06/2026";
   render();
 })();
 </script>
