@@ -3,225 +3,238 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>GEROT UTR – SMG1 | Daily KPIs</title>
+<title>GEROT UTR – SMG1 | Dashboard Diário</title>
 <style>
   * { box-sizing: border-box; margin: 0; padding: 0; }
-  body { font-family: 'Segoe UI', Arial, sans-serif; background: #f5f5f5; font-size: 13px; height: 100vh; display: flex; flex-direction: column; overflow: hidden; }
+  body { font-family: 'Segoe UI', Arial, sans-serif; background: #f5f5f5; font-size: 13px; height: 100vh; overflow: hidden; display: flex; flex-direction: column; }
 
   /* HEADER */
   .header { background: #FFE600; padding: 8px 16px; display: flex; align-items: center; gap: 12px; flex-shrink: 0; }
-  .header-logo { width: 36px; height: 36px; background: #333; border-radius: 50%; display: flex; align-items: center; justify-content: center; }
-  .header-logo svg { width: 22px; height: 22px; fill: #FFE600; }
-  .header-title { flex: 1; }
-  .header-title h1 { font-size: 16px; font-weight: 700; color: #333; line-height: 1.2; }
-  .header-title p { font-size: 11px; color: #555; }
-  .date-selector { display: flex; align-items: center; gap: 8px; }
-  .date-selector label { font-size: 11px; font-weight: 600; color: #333; }
-  .date-selector select { font-size: 12px; padding: 4px 8px; border: 1px solid #ccc; border-radius: 4px; background: white; cursor: pointer; }
+  .header .logo { font-size: 22px; font-weight: 900; color: #333; letter-spacing: -1px; }
+  .header .title { flex: 1; }
+  .header .title h1 { font-size: 15px; font-weight: 700; color: #333; }
+  .header .title small { font-size: 11px; color: #555; }
+  .header .date-ctrl { display: flex; align-items: center; gap: 6px; }
+  .header .date-ctrl select { padding: 4px 8px; border-radius: 4px; border: 1px solid #bbb; font-size: 12px; background: #fff; }
 
   /* SUMMARY BAR */
-  .summary-bar { background: #333; color: white; padding: 6px 16px; display: flex; gap: 24px; align-items: center; flex-shrink: 0; }
-  .summary-item { display: flex; align-items: center; gap: 6px; font-size: 12px; }
-  .badge { width: 10px; height: 10px; border-radius: 50%; }
-  .badge-green { background: #4caf50; }
-  .badge-red { background: #f44336; }
-  .badge-orange { background: #ff9800; }
-  .summary-count { font-weight: 700; font-size: 14px; }
+  .summary { background: #fff; border-bottom: 1px solid #e0e0e0; padding: 6px 16px; display: flex; gap: 16px; align-items: center; flex-shrink: 0; }
+  .summary .badge { display: flex; align-items: center; gap: 6px; font-size: 12px; font-weight: 600; }
+  .badge .dot { width: 12px; height: 12px; border-radius: 50%; display: inline-block; }
+  .badge.meta .dot { background: #2e7d32; }
+  .badge.fora .dot { background: #c62828; }
+  .badge.pend .dot { background: #e65100; }
+  .summary .ref { margin-left: auto; font-size: 11px; color: #777; }
 
-  /* CONTENT */
-  .content { flex: 1; overflow: hidden; padding: 8px 12px; display: flex; flex-direction: column; gap: 8px; }
+  /* SECTIONS */
+  .sections { flex: 1; overflow: hidden; padding: 8px 12px; display: flex; flex-direction: column; gap: 6px; }
+  .section-label { font-size: 10px; font-weight: 700; text-transform: uppercase; color: #666; letter-spacing: 0.5px; margin-bottom: 3px; }
 
-  /* SECTION */
-  .section-title { font-size: 11px; font-weight: 700; text-transform: uppercase; color: #666; letter-spacing: 0.5px; margin-bottom: 4px; }
+  /* CARDS */
+  .cards { display: flex; gap: 6px; }
+  .cards.grid3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; }
 
-  /* CARDS GRID */
-  .cards-row { display: flex; gap: 8px; }
-  .cards-grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
-
-  /* CARD */
-  .card { background: white; border-radius: 6px; padding: 10px 12px; border-left: 4px solid #ccc; position: relative; box-shadow: 0 1px 3px rgba(0,0,0,0.08); flex: 1; }
+  .card { background: #fff; border-radius: 6px; border-left: 4px solid #ccc; padding: 8px 10px; position: relative; box-shadow: 0 1px 3px rgba(0,0,0,0.08); flex: 1; }
   .card.meta { border-left-color: #2e7d32; }
   .card.fora { border-left-color: #c62828; }
-  .card.pendente { border-left-color: #e65100; }
+  .card.pend { border-left-color: #e65100; }
 
-  .card-chip { position: absolute; top: 8px; right: 8px; font-size: 10px; font-weight: 700; padding: 2px 7px; border-radius: 10px; white-space: nowrap; }
-  .chip-meta { background: #e8f5e9; color: #2e7d32; }
-  .chip-fora { background: #ffebee; color: #c62828; }
-  .chip-pendente { background: #fff3e0; color: #e65100; }
+  .card .chip { position: absolute; top: 6px; right: 8px; font-size: 9px; font-weight: 700; padding: 2px 6px; border-radius: 10px; }
+  .card.meta .chip { background: #e8f5e9; color: #2e7d32; }
+  .card.fora .chip { background: #ffebee; color: #c62828; }
+  .card.pend .chip { background: #fff3e0; color: #e65100; }
 
-  .card-name { font-weight: 700; font-size: 12px; color: #333; margin-bottom: 4px; padding-right: 70px; line-height: 1.3; }
-  .card-value { font-size: 20px; font-weight: 800; color: #222; line-height: 1; }
-  .card-value.pending-val { font-size: 14px; color: #e65100; font-weight: 700; }
-  .card-meta { font-size: 10px; color: #888; margin-top: 3px; }
-  .previa-tag { display: inline-block; background: #fff9c4; color: #795548; font-size: 9px; font-weight: 600; padding: 1px 5px; border-radius: 3px; margin-left: 4px; vertical-align: middle; }
-  .card-wide { flex: 2; }
+  .card .kpi-name { font-weight: 700; font-size: 11px; color: #333; padding-right: 60px; line-height: 1.2; }
+  .card .kpi-value { font-size: 20px; font-weight: 800; margin: 3px 0 1px; line-height: 1; }
+  .card.meta .kpi-value { color: #2e7d32; }
+  .card.fora .kpi-value { color: #c62828; }
+  .card.pend .kpi-value { color: #e65100; }
+  .card .kpi-meta { font-size: 10px; color: #888; }
+  .tag-previa { display: inline-block; background: #FFE600; color: #333; font-size: 9px; font-weight: 700; padding: 1px 5px; border-radius: 3px; margin-left: 4px; vertical-align: middle; }
+
+  .card-full { flex: unset; width: 100%; }
 </style>
 </head>
 <body>
 
 <div class="header">
-  <div class="header-logo">
-    <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 14H9V8h2v8zm4 0h-2V8h2v8z"/></svg>
+  <div class="logo">ML</div>
+  <div class="title">
+    <h1>GEROT UTR – SMG1 · Dashboard Diário</h1>
+    <small>Gestão da Rotina · Unidade de Tratamento e Rastreio</small>
   </div>
-  <div class="header-title">
-    <h1>GEROT UTR – SMG1</h1>
-    <p>Dashboard Diário de KPIs</p>
-  </div>
-  <div class="date-selector">
-    <label>Data:</label>
-    <select id="datePicker" onchange="renderDashboard()">
-      <option value="04/06/2026">04/06/2026</option>
-      <option value="03/06/2026">03/06/2026</option>
-      <option value="02/06/2026">02/06/2026</option>
-      <option value="01/06/2026">01/06/2026</option>
-      <option value="31/05/2026">31/05/2026</option>
-    </select>
+  <div class="date-ctrl">
+    <label for="selDate" style="font-size:12px;font-weight:600;">Data:</label>
+    <select id="selDate" onchange="renderDate(this.value)"></select>
   </div>
 </div>
 
-<div class="summary-bar" id="summaryBar">
-  <span style="font-size:12px;font-weight:600;">Resumo:</span>
-  <div class="summary-item"><div class="badge badge-green"></div><span class="summary-count" id="cnt-meta">–</span><span>Na Meta</span></div>
-  <div class="summary-item"><div class="badge badge-red"></div><span class="summary-count" id="cnt-fora">–</span><span>Fora da Meta</span></div>
-  <div class="summary-item"><div class="badge badge-orange"></div><span class="summary-count" id="cnt-pend">–</span><span>Pendente</span></div>
-  <div style="margin-left:auto;font-size:11px;color:#aaa;" id="updateTime"></div>
-</div>
+<div class="summary" id="summary"></div>
 
-<div class="content" id="mainContent">
-  <!-- rendered by JS -->
-</div>
+<div class="sections" id="sections"></div>
 
 <script>
 const HISTORICO = {
-  "04/06/2026": { abs: 13.04, absPrevia: true, lms: 85.20, cia: 1.45, coa: 1.65, spr: 65.97, delay: 7.17, tmc: 56.44, ds: 88.42, fech: 38.58, oot: 79.35, dit: null },
-  "03/06/2026": { abs: 10.65, absPrevia: true, lms: 82.76, cia: 3.21, coa: 3.74, spr: 64.62, delay: null, tmc: 57.35, ds: 95.25, fech: 81.01, oot: 77.75, dit: null },
-  "02/06/2026": { abs: 9.50,  absPrevia: true, lms: 66.51, cia: 5.39, coa: 6.5,  spr: 53.78, delay: 3.86, tmc: 67.23, ds: null,  fech: 78.91, oot: 74.33, dit: 626 },
-  "01/06/2026": { abs: 9.89,  absPrevia: false,lms: 82.24, cia: 10.40,coa: 6.49, spr: 65.58, delay: 33.33,tmc: 45.57, ds: 95.35, fech: 49.13, oot: 60.95, dit: 889 },
-  "31/05/2026": { abs: 16.98, absPrevia: false,lms: 76.84, cia: 15.38,coa: 10.39,spr: 80.39, delay: null, tmc: 45.77, ds: 88.71, fech: 58.67, oot: 80.17, dit: 741 }
+  "04/06/2026": {
+    abs: 13.04, absPrevia: true,
+    lms: 80.63,
+    cia: 8.50,
+    coa: 6.48,
+    spr: 65.97,
+    delay: 7.17,
+    tmc: 56.44,
+    ds: 88.42,
+    fag: 38.58,
+    oot: 79.35,
+    dit: null
+  },
+  "03/06/2026": {
+    abs: 10.65,
+    lms: 82.76,
+    cia: 3.21,
+    coa: 3.74,
+    spr: 64.62,
+    delay: null,
+    tmc: 57.35,
+    ds: 95.25,
+    fag: 81.01,
+    oot: 77.75,
+    dit: null
+  },
+  "02/06/2026": {
+    abs: 9.50,
+    lms: 66.51,
+    cia: 5.39,
+    coa: 6.5,
+    spr: 53.78,
+    delay: 3.86,
+    tmc: 67.23,
+    ds: null,
+    fag: 78.91,
+    oot: 74.33,
+    dit: 626
+  },
+  "01/06/2026": {
+    abs: 9.89,
+    lms: 82.24,
+    cia: 10.40,
+    coa: 6.49,
+    spr: 65.58,
+    delay: 7.17,
+    tmc: 45.57,
+    ds: 95.35,
+    fag: 49.13,
+    oot: 60.95,
+    dit: 889
+  },
+  "31/05/2026": {
+    abs: 16.98,
+    lms: 76.84,
+    cia: 15.38,
+    coa: 10.39,
+    spr: 80.39,
+    delay: null,
+    tmc: 45.77,
+    ds: 88.71,
+    fag: 58.67,
+    oot: 80.17,
+    dit: 741
+  }
 };
 
-function status(val, meta, dir, isPendente) {
-  if (isPendente || val === null || val === undefined || val === 0) return 'pendente';
-  if (dir === 'lte') return val <= meta ? 'meta' : 'fora';
-  if (dir === 'gte') return val >= meta ? 'meta' : 'fora';
-  return 'pendente';
+const METAS = {
+  abs:   { label: "Absenteísmo Absoluto",    meta: "≤ 4%",     ok: v => v <= 4,          unit: "%",   section: "People" },
+  lms:   { label: "% Utilização LMS",        meta: "≥ 80%",    ok: v => v >= 80,         unit: "%",   section: "Profitability" },
+  cia:   { label: "%CIA",                     meta: "≤ 5%",     ok: v => v <= 5,          unit: "%",   section: "Profitability" },
+  coa:   { label: "%COA",                     meta: "≤ 5%",     ok: v => v <= 5,          unit: "%",   section: "Profitability" },
+  spr:   { label: "SPR LM",                   meta: "≥ 67,58",  ok: v => v >= 67.58,      unit: "",    section: "Profitability" },
+  dit:   { label: "DIT – Pacotes Acum. SVC", meta: "< 500 pcts", ok: v => v < 500,        unit: " pcts", section: "Experience" },
+  delay: { label: "Delay (Cause SVC)",        meta: "≤ 4%",     ok: v => v <= 4,          unit: "%",   section: "Experience" },
+  tmc:   { label: "TMC (% Cumpr. Temp.)",     meta: "≥ 83%",    ok: v => v >= 83,         unit: "%",   section: "Experience" },
+  ds:    { label: "Delivery Success",         meta: "≥ 98,1%",  ok: v => v >= 98.1,       unit: "%",   section: "Experience" },
+  fag:   { label: "Fechamento Automático",    meta: "≥ 70%",    ok: v => v >= 70,         unit: "%",   section: "Experience" },
+  oot:   { label: "OOT Waves 3.0",            meta: "≥ 85%",    ok: v => v >= 85,         unit: "%",   section: "Experience" }
+};
+
+const SECTIONS = ["People", "Profitability", "Experience"];
+const SECTION_KEYS = {
+  People: ["abs"],
+  Profitability: ["lms", "cia", "coa", "spr"],
+  Experience: ["dit", "delay", "tmc", "ds", "fag", "oot"]
+};
+
+function fmt(v, unit) {
+  if (v === null || v === undefined) return "–";
+  if (unit === "" ) return v.toFixed(2).replace(".", ",");
+  if (unit === " pcts") return Math.round(v).toLocaleString("pt-BR");
+  return v.toFixed(2).replace(".", ",") + unit;
 }
 
-// Special: delay 0 == pendente
-function delayStatus(val) {
-  if (val === null || val === undefined || val === 0) return 'pendente';
-  return val <= 4 ? 'meta' : 'fora';
+function status(key, v) {
+  if (v === null || v === undefined || (key === "delay" && v === 0)) return "pend";
+  return METAS[key].ok(v) ? "meta" : "fora";
 }
 
-function fmt(val, suffix) {
-  if (val === null || val === undefined) return null;
-  return val.toFixed(2).replace('.', ',') + (suffix || '');
+function chipLabel(st) {
+  return st === "meta" ? "Na Meta" : st === "fora" ? "Fora da Meta" : "Pendente";
 }
 
-function card(name, val, meta, dir, suffix, previa, isDelay, isDIT) {
-  let st, chip, chipCls, borderCls;
-  if (isDelay) { st = delayStatus(val); }
-  else if (isDIT) {
-    if (val === null || val === undefined) st = 'pendente';
-    else st = val < 500 ? 'meta' : 'fora';
-  } else {
-    st = status(val, meta, dir);
-  }
-
-  if (st === 'meta')     { chip = 'Na Meta';     chipCls = 'chip-meta';     borderCls = 'meta'; }
-  else if (st === 'fora'){ chip = 'Fora da Meta'; chipCls = 'chip-fora';     borderCls = 'fora'; }
-  else                   { chip = 'Pendente';     chipCls = 'chip-pendente'; borderCls = 'pendente'; }
-
-  let valueHtml;
-  if (st === 'pendente') {
-    valueHtml = `<div class="card-value pending-val">Pendente</div>`;
-  } else {
-    const fmtVal = isDIT ? Math.round(val) + ' pcts' : fmt(val, suffix);
-    const previaTag = previa ? `<span class="previa-tag">(prévia)</span>` : '';
-    valueHtml = `<div class="card-value">${fmtVal}${previaTag}</div>`;
-  }
-
-  const metaText = isDIT ? 'Meta: &lt; 500 pcts' : `Meta: ${dir === 'gte' ? '≥' : '≤'} ${fmt(meta, suffix)}`;
-
-  return `
-  <div class="card ${borderCls}">
-    <span class="card-chip ${chipCls}">${chip}</span>
-    <div class="card-name">${name}</div>
-    ${valueHtml}
-    <div class="card-meta">${metaText}</div>
-  </div>`;
-}
-
-function renderDashboard() {
-  const sel = document.getElementById('datePicker').value;
-  const d = HISTORICO[sel];
+function renderDate(date) {
+  const d = HISTORICO[date];
   if (!d) return;
 
-  let meta = 0, fora = 0, pend = 0;
+  let nm = 0, fm = 0, pn = 0;
+  const allKeys = Object.keys(METAS);
+  allKeys.forEach(k => {
+    const v = d[k];
+    const st = status(k, v);
+    if (st === "meta") nm++;
+    else if (st === "fora") fm++;
+    else pn++;
+  });
 
-  function count(val, metaV, dir, previa, isDelay, isDIT) {
-    let st;
-    if (isDelay) { st = delayStatus(val); }
-    else if (isDIT) { st = (val === null || val === undefined) ? 'pendente' : (val < 500 ? 'meta' : 'fora'); }
-    else { st = status(val, metaV, dir); }
-    if (st === 'meta') meta++;
-    else if (st === 'fora') fora++;
-    else pend++;
-  }
-
-  count(d.abs,  4,    'lte', d.absPrevia);
-  count(d.lms,  80,   'gte');
-  count(d.cia,  5,    'lte');
-  count(d.coa,  5,    'lte');
-  count(d.spr,  67.58,'gte');
-  count(d.delay,4,    'lte',false,true);
-  count(d.tmc,  83,   'gte');
-  count(d.ds,   98.1, 'gte');
-  count(d.fech, 70,   'gte');
-  count(d.oot,  85,   'gte');
-  count(d.dit,  500,  'lte',false,false,true);
-
-  document.getElementById('cnt-meta').textContent = meta;
-  document.getElementById('cnt-fora').textContent = fora;
-  document.getElementById('cnt-pend').textContent = pend;
-  document.getElementById('updateTime').textContent = 'Referência: ' + sel;
-
-  const html = `
-    <div>
-      <div class="section-title">👥 People</div>
-      <div class="cards-row">
-        ${card('Absenteísmo Absoluto', d.abs, 4, 'lte', '%', d.absPrevia)}
-      </div>
-    </div>
-
-    <div>
-      <div class="section-title">💰 Profitability</div>
-      <div class="cards-row">
-        ${card('% Utilização LMS', d.lms, 80, 'gte', '%')}
-        ${card('%CIA', d.cia, 5, 'lte', '%')}
-        ${card('%COA', d.coa, 5, 'lte', '%')}
-        ${card('SPR LM', d.spr, 67.58, 'gte', '')}
-      </div>
-    </div>
-
-    <div>
-      <div class="section-title">⭐ Experience</div>
-      <div class="cards-grid-3">
-        ${card('DIT – Pacotes Acum. SVC', d.dit, 500, 'lte', '', false, false, true)}
-        ${card('Delay (Cause SVC)', d.delay, 4, 'lte', '%', false, true)}
-        ${card('TMC (% Cumprimento Temp.)', d.tmc, 83, 'gte', '%')}
-        ${card('Delivery Success', d.ds, 98.1, 'gte', '%')}
-        ${card('Fechamento Automático', d.fech, 70, 'gte', '%')}
-        ${card('OOT Waves 3.0', d.oot, 85, 'gte', '%')}
-      </div>
-    </div>
+  document.getElementById("summary").innerHTML = `
+    <span class="badge meta"><span class="dot"></span> Na Meta: <strong>${nm}</strong></span>
+    <span class="badge fora"><span class="dot"></span> Fora da Meta: <strong>${fm}</strong></span>
+    <span class="badge pend"><span class="dot"></span> Pendente: <strong>${pn}</strong></span>
+    <span class="ref">Atualizado com dados de: ${date}</span>
   `;
 
-  document.getElementById('mainContent').innerHTML = html;
+  let html = "";
+  SECTIONS.forEach(sec => {
+    const keys = SECTION_KEYS[sec];
+    const isGrid3 = sec === "Experience";
+    html += `<div><div class="section-label">${sec}</div><div class="cards${isGrid3 ? " grid3" : ""}">`;
+    keys.forEach(k => {
+      const v = d[k];
+      const st = status(k, v);
+      const m = METAS[k];
+      const previa = (k === "abs" && d.absPrevia) ? `<span class="tag-previa">prévia</span>` : "";
+      const displayVal = (st === "pend") ? "Pendente" : `${fmt(v, m.unit)}${previa}`;
+      html += `
+        <div class="card ${st}${sec === "People" ? " card-full" : ""}">
+          <span class="chip">${chipLabel(st)}</span>
+          <div class="kpi-name">${m.label}</div>
+          <div class="kpi-value">${displayVal}</div>
+          <div class="kpi-meta">Meta: ${m.meta}</div>
+        </div>`;
+    });
+    html += `</div></div>`;
+  });
+
+  document.getElementById("sections").innerHTML = html;
 }
 
-// Init
-renderDashboard();
+// Populate select
+const sel = document.getElementById("selDate");
+Object.keys(HISTORICO).forEach(d => {
+  const opt = document.createElement("option");
+  opt.value = d;
+  opt.text = d;
+  sel.appendChild(opt);
+});
+sel.value = "04/06/2026";
+renderDate("04/06/2026");
 </script>
 </body>
 </html>
