@@ -3,220 +3,327 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>GEROT UTR SMG1 – Dashboard Diário</title>
+<title>GEROT UTR – SMG1 | Dashboard Diário</title>
 <style>
   * { box-sizing: border-box; margin: 0; padding: 0; }
-  body { font-family: 'Segoe UI', Arial, sans-serif; background: #f4f4f4; font-size: 13px; height: 100vh; overflow: hidden; display: flex; flex-direction: column; }
-  
-  /* Header */
-  .header { background: #FFE600; padding: 8px 16px; display: flex; align-items: center; gap: 12px; flex-shrink: 0; }
-  .logo { width: 36px; height: 36px; background: #333; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: #FFE600; font-weight: 900; font-size: 14px; }
-  .header-title { flex: 1; }
-  .header-title h1 { font-size: 16px; font-weight: 700; color: #333; }
+  body { font-family: 'Segoe UI', Arial, sans-serif; background: #f5f5f5; font-size: 13px; min-height: 100vh; }
+
+  /* HEADER */
+  .header {
+    background: #FFE600;
+    padding: 8px 16px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 3px solid #333;
+  }
+  .header-left { display: flex; align-items: center; gap: 10px; }
+  .header-logo {
+    width: 42px; height: 42px;
+    background: #333; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    color: #FFE600; font-weight: 900; font-size: 14px; letter-spacing: -1px;
+  }
+  .header-title h1 { font-size: 17px; font-weight: 800; color: #333; }
   .header-title p { font-size: 11px; color: #555; }
-  .date-selector { display: flex; align-items: center; gap: 8px; }
-  .date-selector label { font-size: 12px; font-weight: 600; color: #333; }
-  .date-selector select { padding: 4px 8px; border: 1px solid #ccc; border-radius: 4px; font-size: 12px; background: white; }
+  .header-right { display: flex; align-items: center; gap: 8px; }
+  .date-selector { padding: 5px 8px; border-radius: 6px; border: 1px solid #bbb; font-size: 12px; background: #fff; }
 
-  /* Summary bar */
-  .summary { background: #333; color: white; padding: 6px 16px; display: flex; gap: 20px; align-items: center; flex-shrink: 0; }
-  .summary-item { display: flex; align-items: center; gap: 6px; font-size: 12px; }
+  /* SUMMARY BAR */
+  .summary-bar {
+    background: #fff;
+    display: flex;
+    gap: 0;
+    border-bottom: 1px solid #e0e0e0;
+    padding: 6px 16px;
+    align-items: center;
+  }
+  .summary-item {
+    display: flex; align-items: center; gap: 6px;
+    padding: 4px 14px;
+    border-right: 1px solid #e0e0e0;
+    font-size: 12px;
+  }
+  .summary-item:last-child { border-right: none; }
   .summary-dot { width: 10px; height: 10px; border-radius: 50%; }
-  .dot-green { background: #4caf50; }
-  .dot-red { background: #f44336; }
-  .dot-orange { background: #ff9800; }
-  .summary-count { font-weight: 700; font-size: 14px; }
-  .summary-label { color: #ccc; }
-  .summary-date { margin-left: auto; font-size: 11px; color: #aaa; }
+  .dot-green { background: #2e7d32; }
+  .dot-red { background: #c62828; }
+  .dot-orange { background: #e65100; }
+  .summary-count { font-size: 18px; font-weight: 800; line-height: 1; }
+  .summary-label { font-size: 11px; color: #555; }
 
-  /* Main content */
-  .main { flex: 1; overflow-y: auto; padding: 8px 12px; }
-  
-  /* Section */
-  .section { margin-bottom: 8px; }
-  .section-title { font-size: 11px; font-weight: 700; text-transform: uppercase; color: #666; letter-spacing: 1px; margin-bottom: 6px; padding-left: 4px; }
-  .cards-row { display: flex; gap: 8px; }
-  .cards-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+  /* DATE DISPLAY */
+  .date-display {
+    padding: 4px 16px;
+    font-size: 12px;
+    color: #666;
+    background: #fafafa;
+    border-bottom: 1px solid #e8e8e8;
+  }
 
-  /* Card */
-  .card { background: white; border-radius: 6px; padding: 8px 10px; flex: 1; position: relative; border-left: 4px solid #ccc; box-shadow: 0 1px 3px rgba(0,0,0,0.1); min-width: 0; }
-  .card.meta { border-left-color: #2e7d32; }
-  .card.fora { border-left-color: #c62828; }
-  .card.pendente { border-left-color: #e65100; }
+  /* MAIN CONTENT */
+  .content { padding: 10px 14px; }
 
-  .status-chip { position: absolute; top: 6px; right: 8px; font-size: 9px; font-weight: 700; padding: 2px 6px; border-radius: 10px; text-transform: uppercase; letter-spacing: 0.5px; }
-  .chip-meta { background: #e8f5e9; color: #2e7d32; }
-  .chip-fora { background: #ffebee; color: #c62828; }
-  .chip-pendente { background: #fff3e0; color: #e65100; }
+  /* SECTION */
+  .section { margin-bottom: 10px; }
+  .section-title {
+    font-size: 11px; font-weight: 700; text-transform: uppercase;
+    letter-spacing: 1px; color: #555; margin-bottom: 6px;
+    padding-left: 6px; border-left: 3px solid #FFE600;
+  }
+
+  /* CARDS */
+  .cards-row { display: flex; gap: 8px; flex-wrap: nowrap; }
+  .cards-grid3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+  .card-full { display: block; width: 100%; }
+
+  .card {
+    background: #fff;
+    border-radius: 8px;
+    padding: 9px 12px;
+    border-left: 4px solid #ccc;
+    position: relative;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+    flex: 1;
+    min-width: 0;
+  }
+  .card.green { border-left-color: #2e7d32; }
+  .card.red { border-left-color: #c62828; }
+  .card.orange { border-left-color: #e65100; }
+
+  .card-chip {
+    position: absolute; top: 7px; right: 7px;
+    font-size: 9px; font-weight: 700; padding: 2px 6px;
+    border-radius: 10px; text-transform: uppercase; letter-spacing: 0.5px;
+  }
+  .chip-green { background: #e8f5e9; color: #2e7d32; }
+  .chip-red { background: #ffebee; color: #c62828; }
+  .chip-orange { background: #fff3e0; color: #e65100; }
 
   .card-name { font-size: 11px; font-weight: 700; color: #333; margin-bottom: 4px; padding-right: 70px; }
-  .card-value { font-size: 20px; font-weight: 700; color: #333; line-height: 1; }
-  .card-value .preview-tag { font-size: 9px; font-weight: 500; background: #FFE600; color: #333; padding: 1px 4px; border-radius: 3px; vertical-align: middle; margin-left: 4px; }
-  .card-meta { font-size: 10px; color: #888; margin-top: 3px; }
-  .card.meta .card-value { color: #2e7d32; }
-  .card.fora .card-value { color: #c62828; }
-  .card.pendente .card-value { color: #e65100; }
+  .card-value { font-size: 20px; font-weight: 800; color: #111; line-height: 1.1; }
+  .card-value.pending { font-size: 14px; color: #e65100; }
+  .card-meta { font-size: 10px; color: #888; margin-top: 2px; }
+  .preview-tag {
+    display: inline-block;
+    font-size: 9px; font-weight: 600;
+    background: #fff9c4; color: #7c6b00;
+    border: 1px solid #f0d000;
+    padding: 1px 5px; border-radius: 3px; margin-left: 4px; vertical-align: middle;
+  }
+
+  @media (max-width: 700px) {
+    .cards-row { flex-wrap: wrap; }
+    .cards-grid3 { grid-template-columns: repeat(2, 1fr); }
+  }
 </style>
 </head>
 <body>
 
 <div class="header">
-  <div class="logo">ML</div>
-  <div class="header-title">
-    <h1>GEROT UTR – Site SMG1</h1>
-    <p>Dashboard Diário de KPIs Operacionais</p>
+  <div class="header-left">
+    <div class="header-logo">ML</div>
+    <div class="header-title">
+      <h1>GEROT UTR – SMG1</h1>
+      <p>Dashboard Diário de KPIs Operacionais</p>
+    </div>
   </div>
-  <div class="date-selector">
-    <label>Data:</label>
-    <select id="dateSelect" onchange="renderDashboard()">
+  <div class="header-right">
+    <label for="dateSelect" style="font-size:12px;font-weight:600;">📅</label>
+    <select id="dateSelect" class="date-selector" onchange="loadDate(this.value)">
     </select>
   </div>
 </div>
 
-<div class="summary">
-  <div class="summary-item">
-    <div class="summary-dot dot-green"></div>
-    <span class="summary-count" id="cnt-meta">0</span>
-    <span class="summary-label">Na Meta</span>
-  </div>
-  <div class="summary-item">
-    <div class="summary-dot dot-red"></div>
-    <span class="summary-count" id="cnt-fora">0</span>
-    <span class="summary-label">Fora da Meta</span>
-  </div>
-  <div class="summary-item">
-    <div class="summary-dot dot-orange"></div>
-    <span class="summary-count" id="cnt-pend">0</span>
-    <span class="summary-label">Pendente</span>
-  </div>
-  <span class="summary-date" id="summary-date"></span>
+<div class="summary-bar" id="summaryBar">
+  <!-- filled by JS -->
 </div>
 
-<div class="main" id="main-content">
+<div class="date-display" id="dateDisplay"></div>
+
+<div class="content" id="mainContent">
+  <!-- filled by JS -->
 </div>
 
 <script>
+// ============================================================
+// HISTÓRICO DE DADOS
+// ============================================================
 const HISTORICO = {
-  "31/05/2026": { abs: null, lms: 76.84, cia: 15.38, coa: 10.39, spr: 80.39, delay: null, tmc: 45.77, ds: 88.71, fech: 58.67, oot: 80.17, dit: 741, abs_prev: false },
-  "01/06/2026": { abs: 9.89, lms: 82.24, cia: 10.40, coa: 6.49, spr: 65.58, delay: 33.33, tmc: 45.57, ds: 95.35, fech: 49.13, oot: 60.95, dit: 889 },
-  "02/06/2026": { abs: 9.50, lms: 66.51, cia: 5.39, coa: 6.5, spr: 53.78, delay: 3.86, tmc: 67.23, ds: null, fech: 78.91, oot: 74.33, dit: 626 },
-  "03/06/2026": { abs: 10.65, lms: 82.76, cia: 3.21, coa: 3.74, spr: 64.62, delay: null, tmc: 57.35, ds: 95.25, fech: 81.01, oot: 77.75, dit: null },
-  "04/06/2026": { abs: 13.04, lms: 85.20, cia: 1.45, coa: 1.65, spr: 65.97, delay: 7.17, tmc: 56.44, ds: 88.42, fech: 38.58, oot: 79.35, dit: null },
-  "07/06/2026": { abs: 16.13, abs_prev: true, lms: 76.10, cia: 14.29, coa: 1.43, spr: 87.89, delay: 3.70, tmc: 43.16, ds: 89.99, fech: 74.65, oot: 90.33, dit: 782 }
-};
-
-const METAS = {
-  abs:   { label: 'Absenteísmo Absoluto',     meta: '≤ 4%',    check: v => v <= 4,    fmt: v => v.toFixed(2) + '%',  section: 'people' },
-  lms:   { label: '% Utilização LMS',          meta: '≥ 80%',   check: v => v >= 80,   fmt: v => v.toFixed(2) + '%',  section: 'profit' },
-  cia:   { label: '%CIA',                       meta: '≤ 5%',    check: v => v <= 5,    fmt: v => v.toFixed(2) + '%',  section: 'profit' },
-  coa:   { label: '%COA',                       meta: '≤ 5%',    check: v => v <= 5,    fmt: v => v.toFixed(2) + '%',  section: 'profit' },
-  spr:   { label: 'SPR LM',                    meta: '≥ 67,58', check: v => v >= 67.58, fmt: v => v.toFixed(2),        section: 'profit' },
-  dit:   { label: 'DIT – Pacotes Acum. SVC',   meta: '< 500',   check: v => v < 500,   fmt: v => v + ' pcts',         section: 'exp' },
-  delay: { label: 'Delay (Cause SVC)',          meta: '≤ 4%',    check: v => v > 0 && v <= 4, fmt: v => v.toFixed(2) + '%', section: 'exp', pendente_if_zero: true },
-  tmc:   { label: 'TMC (% Cumprimento Temp.)', meta: '≥ 83%',   check: v => v >= 83,   fmt: v => v.toFixed(2) + '%',  section: 'exp' },
-  ds:    { label: 'Delivery Success',          meta: '≥ 98,1%', check: v => v >= 98.1, fmt: v => v.toFixed(2) + '%',  section: 'exp', no_fallback: true },
-  fech:  { label: 'Fechamento Automático',     meta: '≥ 70%',   check: v => v >= 70,   fmt: v => v.toFixed(2) + '%',  section: 'exp' },
-  oot:   { label: 'OOT Waves 3.0',             meta: '≥ 85%',   check: v => v >= 85,   fmt: v => v.toFixed(2) + '%',  section: 'exp' }
-};
-
-function getStatus(key, val, data) {
-  const m = METAS[key];
-  if (val === null || val === undefined) return 'pendente';
-  if (key === 'delay' && val === 0) return 'pendente';
-  return m.check(val) ? 'meta' : 'fora';
-}
-
-function buildCard(key, data) {
-  const m = METAS[key];
-  const val = data[key];
-  const isPrev = (key === 'abs' && data.abs_prev);
-  const status = getStatus(key, val, data);
-  
-  const chipClass = status === 'meta' ? 'chip-meta' : status === 'fora' ? 'chip-fora' : 'chip-pendente';
-  const chipLabel = status === 'meta' ? 'Na Meta' : status === 'fora' ? 'Fora da Meta' : 'Pendente';
-  const cardClass = status;
-  
-  let valueDisplay;
-  if (status === 'pendente') {
-    valueDisplay = '<span style="font-size:14px;color:#e65100">Pendente</span>';
-  } else {
-    const fmtVal = m.fmt(val);
-    const prevTag = isPrev ? '<span class="preview-tag">prévia</span>' : '';
-    valueDisplay = fmtVal + prevTag;
+  "31/05/2026": {
+    abs: null, lms: 76.84, cia: 15.38, coa: 10.39, spr: 80.39,
+    delay: null, tmc: 45.77, ds: 88.71, fechamento: 58.67, oot: 80.17, dit: 741,
+    previews: []
+  },
+  "01/06/2026": {
+    abs: 9.89, lms: 82.24, cia: 10.40, coa: 6.49, spr: 65.58,
+    delay: 33.33, tmc: 45.57, ds: 95.35, fechamento: 49.13, oot: 60.95, dit: 889,
+    previews: []
+  },
+  "02/06/2026": {
+    abs: 9.50, lms: 66.51, cia: 5.39, coa: 6.5, spr: 53.78,
+    delay: 3.86, tmc: 67.23, ds: null, fechamento: 78.91, oot: 74.33, dit: 626,
+    previews: []
+  },
+  "03/06/2026": {
+    abs: 10.65, lms: 82.76, cia: 3.21, coa: 3.74, spr: 64.62,
+    delay: null, tmc: 57.35, ds: 95.25, fechamento: 81.01, oot: 77.75, dit: null,
+    previews: []
+  },
+  "04/06/2026": {
+    abs: 13.04, lms: 85.20, cia: 1.45, coa: 1.65, spr: 65.97,
+    delay: 7.17, tmc: 56.44, ds: 88.42, fechamento: 38.58, oot: 79.35, dit: null,
+    previews: []
+  },
+  "07/06/2026": {
+    abs: 16.13, lms: 72.68, cia: 14.66, coa: 9.91, spr: 87.89,
+    delay: 3.70, tmc: 43.16, ds: 89.99, fechamento: 74.65, oot: 90.33, dit: 782,
+    previews: ["abs"]
   }
-  
-  return `<div class="card ${cardClass}">
-    <span class="status-chip ${chipClass}">${chipLabel}</span>
-    <div class="card-name">${m.label}</div>
-    <div class="card-value">${valueDisplay}</div>
-    <div class="card-meta">Meta: ${m.meta}</div>
-  </div>`;
+};
+
+// ============================================================
+// METAS
+// ============================================================
+const METAS = {
+  abs:       { label: "Absenteísmo Absoluto",       meta: "≤ 4%",   unit: "%",   check: v => v <= 4,    higherBetter: false },
+  lms:       { label: "% Utilização LMS",           meta: "≥ 80%",  unit: "%",   check: v => v >= 80,   higherBetter: true  },
+  cia:       { label: "% CIA",                      meta: "≤ 5%",   unit: "%",   check: v => v <= 5,    higherBetter: false },
+  coa:       { label: "% COA",                      meta: "≤ 5%",   unit: "%",   check: v => v <= 5,    higherBetter: false },
+  spr:       { label: "SPR LM",                     meta: "≥ 67,58",unit: "",    check: v => v >= 67.58,higherBetter: true  },
+  dit:       { label: "DIT – Pacotes Acum. SVC",    meta: "< 500",  unit: " pcts",check: v => v < 500,  higherBetter: false },
+  delay:     { label: "Delay (Cause SVC)",          meta: "≤ 4%",   unit: "%",   check: v => v !== null && v > 0 && v <= 4, higherBetter: false },
+  tmc:       { label: "TMC (% Cumprimento Temp.)",  meta: "≥ 83%",  unit: "%",   check: v => v >= 83,   higherBetter: true  },
+  ds:        { label: "Delivery Success",           meta: "≥ 98,1%",unit: "%",   check: v => v >= 98.1, higherBetter: true  },
+  fechamento:{ label: "Fechamento Automático",      meta: "≥ 70%",  unit: "%",   check: v => v >= 70,   higherBetter: true  },
+  oot:       { label: "OOT Waves 3.0",              meta: "≥ 85%",  unit: "%",   check: v => v >= 85,   higherBetter: true  }
+};
+
+// ============================================================
+// RENDER
+// ============================================================
+function fmt(v, unit) {
+  if (v === null || v === undefined) return null;
+  if (unit === "" ) return v.toFixed(2).replace('.', ',');
+  if (unit === " pcts") return v.toFixed(0) + " pcts";
+  return v.toFixed(2).replace('.', ',') + unit;
 }
 
-function renderDashboard() {
-  const sel = document.getElementById('dateSelect');
-  const dateKey = sel.value;
-  const data = HISTORICO[dateKey];
-  
-  if (!data) return;
-  
+function cardStatus(key, val) {
+  if (val === null || val === undefined) return "pending";
+  if (key === "delay" && (val === null || val === 0)) return "pending";
+  return METAS[key].check(val) ? "green" : "red";
+}
+
+function renderCard(key, val, isPrev, section) {
+  const m = METAS[key];
+  const status = cardStatus(key, val);
+  const chipClass = { green: "chip-green", red: "chip-red", pending: "chip-orange" }[status];
+  const chipLabel = { green: "Na Meta", red: "Fora da Meta", pending: "Pendente" }[status];
+  const cardClass = status;
+
+  let valueHtml;
+  if (status === "pending") {
+    valueHtml = `<div class="card-value pending">Pendente</div>`;
+  } else {
+    const fmtVal = fmt(val, m.unit);
+    const prevTag = isPrev ? `<span class="preview-tag">prévia</span>` : "";
+    valueHtml = `<div class="card-value">${fmtVal}${prevTag}</div>`;
+  }
+
+  return `
+    <div class="card ${cardClass}" style="${section === 'full' ? 'width:100%' : ''}">
+      <span class="card-chip ${chipClass}">${chipLabel}</span>
+      <div class="card-name">${m.label}</div>
+      ${valueHtml}
+      <div class="card-meta">Meta: ${m.meta}</div>
+    </div>`;
+}
+
+function loadDate(dateStr) {
+  const d = HISTORICO[dateStr];
+  if (!d) return;
+
+  const previews = d.previews || [];
+
   // Count statuses
-  const keys = ['abs','lms','cia','coa','spr','dit','delay','tmc','ds','fech','oot'];
-  let cntMeta = 0, cntFora = 0, cntPend = 0;
+  let naMetaCount = 0, foraCount = 0, pendCount = 0;
+  const keys = ["abs","lms","cia","coa","spr","dit","delay","tmc","ds","fechamento","oot"];
   keys.forEach(k => {
-    const s = getStatus(k, data[k], data);
-    if (s === 'meta') cntMeta++;
-    else if (s === 'fora') cntFora++;
-    else cntPend++;
+    const s = cardStatus(k, d[k]);
+    if (s === "green") naMetaCount++;
+    else if (s === "red") foraCount++;
+    else pendCount++;
   });
-  
-  document.getElementById('cnt-meta').textContent = cntMeta;
-  document.getElementById('cnt-fora').textContent = cntFora;
-  document.getElementById('cnt-pend').textContent = cntPend;
-  document.getElementById('summary-date').textContent = 'Referência: ' + dateKey;
-  
-  const main = document.getElementById('main-content');
-  main.innerHTML = `
+
+  // Summary bar
+  document.getElementById("summaryBar").innerHTML = `
+    <div class="summary-item">
+      <div class="summary-dot dot-green"></div>
+      <div><div class="summary-count" style="color:#2e7d32">${naMetaCount}</div><div class="summary-label">Na Meta</div></div>
+    </div>
+    <div class="summary-item">
+      <div class="summary-dot dot-red"></div>
+      <div><div class="summary-count" style="color:#c62828">${foraCount}</div><div class="summary-label">Fora da Meta</div></div>
+    </div>
+    <div class="summary-item">
+      <div class="summary-dot dot-orange"></div>
+      <div><div class="summary-count" style="color:#e65100">${pendCount}</div><div class="summary-label">Pendente</div></div>
+    </div>`;
+
+  // Date display
+  const [dd, mm, yyyy] = dateStr.split("/");
+  const nomes = ["","Janeiro","Fevereiro","Março","Abril","Maio","Junho","Julho","Agosto","Setembro","Outubro","Novembro","Dezembro"];
+  document.getElementById("dateDisplay").textContent = `Referência: ${dd} de ${nomes[parseInt(mm)]} de ${yyyy}`;
+
+  // Cards
+  document.getElementById("mainContent").innerHTML = `
     <div class="section">
-      <div class="section-title">👥 People</div>
+      <div class="section-title">People</div>
+      <div class="card-full">
+        ${renderCard("abs", d.abs, previews.includes("abs"), "full")}
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-title">Profitability</div>
       <div class="cards-row">
-        ${buildCard('abs', data)}
+        ${renderCard("lms", d.lms, previews.includes("lms"), "")}
+        ${renderCard("cia", d.cia, previews.includes("cia"), "")}
+        ${renderCard("coa", d.coa, previews.includes("coa"), "")}
+        ${renderCard("spr", d.spr, previews.includes("spr"), "")}
       </div>
     </div>
+
     <div class="section">
-      <div class="section-title">💰 Profitability</div>
-      <div class="cards-row">
-        ${buildCard('lms', data)}
-        ${buildCard('cia', data)}
-        ${buildCard('coa', data)}
-        ${buildCard('spr', data)}
+      <div class="section-title">Experience</div>
+      <div class="cards-grid3">
+        ${renderCard("dit", d.dit, previews.includes("dit"), "")}
+        ${renderCard("delay", d.delay, previews.includes("delay"), "")}
+        ${renderCard("tmc", d.tmc, previews.includes("tmc"), "")}
+        ${renderCard("ds", d.ds, previews.includes("ds"), "")}
+        ${renderCard("fechamento", d.fechamento, previews.includes("fechamento"), "")}
+        ${renderCard("oot", d.oot, previews.includes("oot"), "")}
       </div>
-    </div>
-    <div class="section">
-      <div class="section-title">⭐ Experience</div>
-      <div class="cards-grid">
-        ${buildCard('dit', data)}
-        ${buildCard('delay', data)}
-        ${buildCard('tmc', data)}
-        ${buildCard('ds', data)}
-        ${buildCard('fech', data)}
-        ${buildCard('oot', data)}
-      </div>
-    </div>
-  `;
+    </div>`;
 }
 
 // Populate date selector
-const select = document.getElementById('dateSelect');
-const dates = Object.keys(HISTORICO).reverse();
-dates.forEach(d => {
-  const opt = document.createElement('option');
-  opt.value = d;
-  opt.textContent = d;
-  select.appendChild(opt);
-});
-
-renderDashboard();
+window.onload = function() {
+  const sel = document.getElementById("dateSelect");
+  const dates = Object.keys(HISTORICO).reverse();
+  dates.forEach(d => {
+    const opt = document.createElement("option");
+    opt.value = d;
+    opt.textContent = d;
+    sel.appendChild(opt);
+  });
+  // Load most recent date
+  if (dates.length > 0) {
+    sel.value = dates[0];
+    loadDate(dates[0]);
+  }
+};
 </script>
 </body>
 </html>
