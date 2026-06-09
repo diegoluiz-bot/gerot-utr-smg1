@@ -3,10 +3,10 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>GEROT UTR – SMG1 | Dashboard Diário</title>
+<title>GEROT UTR – Dashboard SMG1</title>
 <style>
   * { box-sizing: border-box; margin: 0; padding: 0; }
-  body { font-family: 'Segoe UI', Arial, sans-serif; background: #f5f5f5; font-size: 13px; min-height: 100vh; }
+  body { font-family: 'Segoe UI', Arial, sans-serif; background: #f0f2f5; font-size: 13px; }
 
   /* HEADER */
   .header {
@@ -15,320 +15,253 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
-    border-bottom: 3px solid #333;
+    border-bottom: 2px solid #d4c000;
   }
-  .header-left { display: flex; align-items: center; gap: 10px; }
-  .header-logo {
-    width: 42px; height: 42px;
-    background: #333; border-radius: 50%;
-    display: flex; align-items: center; justify-content: center;
-    color: #FFE600; font-weight: 900; font-size: 14px; letter-spacing: -1px;
+  .header-left { display: flex; align-items: center; gap: 12px; }
+  .logo { font-size: 22px; font-weight: 900; color: #333; }
+  .title { font-size: 15px; font-weight: 700; color: #333; }
+  .subtitle { font-size: 11px; color: #555; }
+  .date-selector { display: flex; align-items: center; gap: 8px; }
+  .date-selector label { font-weight: 600; font-size: 12px; color: #333; }
+  .date-selector select {
+    padding: 4px 8px; border: 1px solid #ccc; border-radius: 4px;
+    font-size: 12px; background: #fff; cursor: pointer;
   }
-  .header-title h1 { font-size: 17px; font-weight: 800; color: #333; }
-  .header-title p { font-size: 11px; color: #555; }
-  .header-right { display: flex; align-items: center; gap: 8px; }
-  .date-selector { padding: 5px 8px; border-radius: 6px; border: 1px solid #bbb; font-size: 12px; background: #fff; }
 
   /* SUMMARY BAR */
   .summary-bar {
-    background: #fff;
-    display: flex;
-    gap: 0;
-    border-bottom: 1px solid #e0e0e0;
-    padding: 6px 16px;
-    align-items: center;
+    display: flex; gap: 8px; padding: 6px 16px; background: #fff;
+    border-bottom: 1px solid #e0e0e0; align-items: center;
   }
-  .summary-item {
-    display: flex; align-items: center; gap: 6px;
-    padding: 4px 14px;
-    border-right: 1px solid #e0e0e0;
-    font-size: 12px;
+  .summary-chip {
+    padding: 3px 12px; border-radius: 12px; font-size: 12px; font-weight: 700;
   }
-  .summary-item:last-child { border-right: none; }
-  .summary-dot { width: 10px; height: 10px; border-radius: 50%; }
-  .dot-green { background: #2e7d32; }
-  .dot-red { background: #c62828; }
-  .dot-orange { background: #e65100; }
-  .summary-count { font-size: 18px; font-weight: 800; line-height: 1; }
-  .summary-label { font-size: 11px; color: #555; }
+  .chip-meta { background: #e8f5e9; color: #2e7d32; }
+  .chip-fora { background: #ffebee; color: #c62828; }
+  .chip-pend { background: #fff3e0; color: #e65100; }
+  .summary-label { font-size: 11px; color: #666; margin-left: 4px; }
 
-  /* DATE DISPLAY */
-  .date-display {
-    padding: 4px 16px;
-    font-size: 12px;
-    color: #666;
-    background: #fafafa;
-    border-bottom: 1px solid #e8e8e8;
-  }
-
-  /* MAIN CONTENT */
-  .content { padding: 10px 14px; }
-
-  /* SECTION */
-  .section { margin-bottom: 10px; }
+  /* SECTIONS */
+  .section { padding: 6px 16px 4px; }
   .section-title {
     font-size: 11px; font-weight: 700; text-transform: uppercase;
-    letter-spacing: 1px; color: #555; margin-bottom: 6px;
-    padding-left: 6px; border-left: 3px solid #FFE600;
+    color: #666; letter-spacing: 1px; margin-bottom: 6px; padding-left: 4px;
+    border-left: 3px solid #FFE600;
   }
 
-  /* CARDS */
+  /* CARDS GRID */
   .cards-row { display: flex; gap: 8px; flex-wrap: nowrap; }
-  .cards-grid3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
-  .card-full { display: block; width: 100%; }
+  .cards-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
 
+  /* CARD */
   .card {
-    background: #fff;
-    border-radius: 8px;
-    padding: 9px 12px;
+    background: #fff; border-radius: 8px; padding: 10px 12px;
     border-left: 4px solid #ccc;
-    position: relative;
-    box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+    box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+    position: relative; min-width: 0;
     flex: 1;
-    min-width: 0;
   }
-  .card.green { border-left-color: #2e7d32; }
-  .card.red { border-left-color: #c62828; }
-  .card.orange { border-left-color: #e65100; }
+  .card.meta { border-left-color: #2e7d32; }
+  .card.fora { border-left-color: #c62828; }
+  .card.pendente { border-left-color: #e65100; }
 
-  .card-chip {
-    position: absolute; top: 7px; right: 7px;
-    font-size: 9px; font-weight: 700; padding: 2px 6px;
-    border-radius: 10px; text-transform: uppercase; letter-spacing: 0.5px;
+  .card-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 4px; }
+  .card-name { font-weight: 700; font-size: 12px; color: #333; line-height: 1.3; max-width: 70%; }
+  .status-chip {
+    font-size: 9px; font-weight: 700; padding: 2px 6px; border-radius: 8px;
+    white-space: nowrap;
   }
-  .chip-green { background: #e8f5e9; color: #2e7d32; }
-  .chip-red { background: #ffebee; color: #c62828; }
-  .chip-orange { background: #fff3e0; color: #e65100; }
+  .chip-meta-sm { background: #e8f5e9; color: #2e7d32; }
+  .chip-fora-sm { background: #ffebee; color: #c62828; }
+  .chip-pend-sm { background: #fff3e0; color: #e65100; }
 
-  .card-name { font-size: 11px; font-weight: 700; color: #333; margin-bottom: 4px; padding-right: 70px; }
-  .card-value { font-size: 20px; font-weight: 800; color: #111; line-height: 1.1; }
-  .card-value.pending { font-size: 14px; color: #e65100; }
-  .card-meta { font-size: 10px; color: #888; margin-top: 2px; }
-  .preview-tag {
-    display: inline-block;
-    font-size: 9px; font-weight: 600;
-    background: #fff9c4; color: #7c6b00;
-    border: 1px solid #f0d000;
-    padding: 1px 5px; border-radius: 3px; margin-left: 4px; vertical-align: middle;
+  .card-value { font-size: 22px; font-weight: 900; color: #222; line-height: 1.1; }
+  .card-value.fora-color { color: #c62828; }
+  .card-value.meta-color { color: #2e7d32; }
+  .card-value.pend-color { color: #e65100; font-size: 14px; font-weight: 700; }
+
+  .card-meta-info { font-size: 10px; color: #888; margin-top: 3px; }
+  .previa-tag {
+    display: inline-block; background: #FFE600; color: #333;
+    font-size: 9px; font-weight: 700; padding: 1px 5px;
+    border-radius: 4px; margin-left: 4px;
   }
 
-  @media (max-width: 700px) {
-    .cards-row { flex-wrap: wrap; }
-    .cards-grid3 { grid-template-columns: repeat(2, 1fr); }
-  }
+  /* WIDE CARD */
+  .card-wide { flex: 1; }
 </style>
 </head>
 <body>
 
+<!-- HEADER -->
 <div class="header">
   <div class="header-left">
-    <div class="header-logo">ML</div>
-    <div class="header-title">
-      <h1>GEROT UTR – SMG1</h1>
-      <p>Dashboard Diário de KPIs Operacionais</p>
+    <div class="logo">🟡 MELI</div>
+    <div>
+      <div class="title">GEROT UTR – Gestão da Rotina</div>
+      <div class="subtitle">Site: SMG1 &nbsp;|&nbsp; Atualização: 09/06/2026</div>
     </div>
   </div>
-  <div class="header-right">
-    <label for="dateSelect" style="font-size:12px;font-weight:600;">📅</label>
-    <select id="dateSelect" class="date-selector" onchange="loadDate(this.value)">
-    </select>
+  <div class="date-selector">
+    <label>📅 Data:</label>
+    <select id="dateSel" onchange="loadDate(this.value)"></select>
   </div>
 </div>
 
-<div class="summary-bar" id="summaryBar">
-  <!-- filled by JS -->
+<!-- SUMMARY BAR -->
+<div class="summary-bar" id="summaryBar"></div>
+
+<!-- PEOPLE -->
+<div class="section">
+  <div class="section-title">👤 People</div>
+  <div class="cards-row">
+    <div class="card card-wide" id="card-abs"></div>
+  </div>
 </div>
 
-<div class="date-display" id="dateDisplay"></div>
+<!-- PROFITABILITY -->
+<div class="section">
+  <div class="section-title">💰 Profitability</div>
+  <div class="cards-row">
+    <div class="card" id="card-lms"></div>
+    <div class="card" id="card-cia"></div>
+    <div class="card" id="card-coa"></div>
+    <div class="card" id="card-spr"></div>
+  </div>
+</div>
 
-<div class="content" id="mainContent">
-  <!-- filled by JS -->
+<!-- EXPERIENCE -->
+<div class="section">
+  <div class="section-title">⭐ Experience</div>
+  <div class="cards-grid">
+    <div class="card" id="card-dit"></div>
+    <div class="card" id="card-delay"></div>
+    <div class="card" id="card-tmc"></div>
+    <div class="card" id="card-delivery"></div>
+    <div class="card" id="card-fag"></div>
+    <div class="card" id="card-oot"></div>
+  </div>
 </div>
 
 <script>
-// ============================================================
-// HISTÓRICO DE DADOS
-// ============================================================
+// ── HISTÓRICO ──────────────────────────────────────────────────────────
 const HISTORICO = {
-  "31/05/2026": {
-    abs: null, lms: 76.84, cia: 15.38, coa: 10.39, spr: 80.39,
-    delay: null, tmc: 45.77, ds: 88.71, fechamento: 58.67, oot: 80.17, dit: 741,
-    previews: []
-  },
-  "01/06/2026": {
-    abs: 9.89, lms: 82.24, cia: 10.40, coa: 6.49, spr: 65.58,
-    delay: 33.33, tmc: 45.57, ds: 95.35, fechamento: 49.13, oot: 60.95, dit: 889,
-    previews: []
-  },
-  "02/06/2026": {
-    abs: 9.50, lms: 66.51, cia: 5.39, coa: 6.5, spr: 53.78,
-    delay: 3.86, tmc: 67.23, ds: null, fechamento: 78.91, oot: 74.33, dit: 626,
-    previews: []
-  },
-  "03/06/2026": {
-    abs: 10.65, lms: 82.76, cia: 3.21, coa: 3.74, spr: 64.62,
-    delay: null, tmc: 57.35, ds: 95.25, fechamento: 81.01, oot: 77.75, dit: null,
-    previews: []
-  },
-  "04/06/2026": {
-    abs: 13.04, lms: 85.20, cia: 1.45, coa: 1.65, spr: 65.97,
-    delay: 7.17, tmc: 56.44, ds: 88.42, fechamento: 38.58, oot: 79.35, dit: null,
-    previews: []
-  },
-  "07/06/2026": {
-    abs: 16.13, lms: 72.68, cia: 14.66, coa: 9.91, spr: 87.89,
-    delay: 3.70, tmc: 43.16, ds: 89.99, fechamento: 74.65, oot: 90.33, dit: 782,
-    previews: ["abs"]
-  },
-  "08/06/2026": {
-    abs: 6.50, lms: 86.29, cia: 6.12, coa: 3.19, spr: 61.12,
-    delay: null, tmc: 42.60, ds: 93.66, fechamento: 57.60, oot: null, dit: 932,
-    previews: ["abs"]
-  }
+  "31/05/2026": { abs:16.98, lms:76.84, cia:15.38, coa:10.39, spr:80.39, delay:null,  tmc:45.77, delivery:88.71, fag:58.67, oot:80.17,  dit:741  },
+  "01/06/2026": { abs:9.89,  lms:82.24, cia:10.40, coa:6.49,  spr:65.58, delay:33.33, tmc:45.57, delivery:95.35, fag:49.13, oot:60.95,  dit:889  },
+  "02/06/2026": { abs:9.50,  lms:66.51, cia:5.39,  coa:6.50,  spr:53.78, delay:3.86,  tmc:67.23, delivery:null,  fag:78.91, oot:74.33,  dit:628  },
+  "03/06/2026": { abs:10.65, lms:82.76, cia:3.21,  coa:3.74,  spr:64.62, delay:null,  tmc:57.35, delivery:95.25, fag:81.01, oot:77.75,  dit:null },
+  "04/06/2026": { abs:13.04, lms:65.20, cia:1.45,  coa:1.65,  spr:65.97, delay:7.17,  tmc:56.44, delivery:88.42, fag:38.58, oot:79.35,  dit:null },
+  "07/06/2026": { abs:16.13, lms:76.10, cia:14.29, coa:1.43,  spr:87.89, delay:3.70,  tmc:89.99, delivery:74.65, fag:90.33, oot:null,   dit:782  },
+  "08/06/2026": { abs:6.50,  lms:86.29, cia:6.12,  coa:3.19,  spr:61.12, delay:null,  tmc:42.60, delivery:93.66, fag:57.60, oot:65.28,  dit:932  }
 };
 
-// ============================================================
-// METAS
-// ============================================================
-const METAS = {
-  abs:       { label: "Absenteísmo Absoluto",       meta: "≤ 4%",   unit: "%",   check: v => v <= 4,    higherBetter: false },
-  lms:       { label: "% Utilização LMS",           meta: "≥ 80%",  unit: "%",   check: v => v >= 80,   higherBetter: true  },
-  cia:       { label: "% CIA",                      meta: "≤ 5%",   unit: "%",   check: v => v <= 5,    higherBetter: false },
-  coa:       { label: "% COA",                      meta: "≤ 5%",   unit: "%",   check: v => v <= 5,    higherBetter: false },
-  spr:       { label: "SPR LM",                     meta: "≥ 67,58",unit: "",    check: v => v >= 67.58,higherBetter: true  },
-  dit:       { label: "DIT – Pacotes Acum. SVC",    meta: "< 500",  unit: " pcts",check: v => v < 500,  higherBetter: false },
-  delay:     { label: "Delay (Cause SVC)",          meta: "≤ 4%",   unit: "%",   check: v => v !== null && v > 0 && v <= 4, higherBetter: false },
-  tmc:       { label: "TMC (% Cumprimento Temp.)",  meta: "≥ 83%",  unit: "%",   check: v => v >= 83,   higherBetter: true  },
-  ds:        { label: "Delivery Success",           meta: "≥ 98,1%",unit: "%",   check: v => v >= 98.1, higherBetter: true  },
-  fechamento:{ label: "Fechamento Automático",      meta: "≥ 70%",  unit: "%",   check: v => v >= 70,   higherBetter: true  },
-  oot:       { label: "OOT Waves 3.0",              meta: "≥ 85%",  unit: "%",   check: v => v >= 85,   higherBetter: true  }
-};
+// ── METAS & CONFIG ─────────────────────────────────────────────────────
+const CONFIG = [
+  { id:"abs",      label:"Absenteísmo Absoluto",      meta:"≤ 4%",    fmt:"%",  previa:true,  check:(v)=>v<=4,      higher:false },
+  { id:"lms",      label:"% Utilização LMS",           meta:"≥ 80%",   fmt:"%",  previa:false, check:(v)=>v>=80,     higher:true  },
+  { id:"cia",      label:"%CIA",                       meta:"≤ 5%",    fmt:"%",  previa:false, check:(v)=>v<=5,      higher:false },
+  { id:"coa",      label:"%COA",                       meta:"≤ 5%",    fmt:"%",  previa:false, check:(v)=>v<=5,      higher:false },
+  { id:"spr",      label:"SPR LM",                     meta:"≥ 67,58", fmt:"",   previa:false, check:(v)=>v>=67.58,  higher:true  },
+  { id:"dit",      label:"DIT – Pacotes Acum. SVC",    meta:"< 500",   fmt:"",   previa:false, check:(v)=>v<500,     higher:false },
+  { id:"delay",    label:"Delay (Cause SVC)",           meta:"≤ 4%",    fmt:"%",  previa:false, check:(v)=>v<=4&&v>0, higher:false },
+  { id:"tmc",      label:"TMC (% Cumprimento Temp.)",  meta:"≥ 83%",   fmt:"%",  previa:false, check:(v)=>v>=83,     higher:true  },
+  { id:"delivery", label:"Delivery Success",            meta:"≥ 98,1%", fmt:"%",  previa:false, check:(v)=>v>=98.1,   higher:true  },
+  { id:"fag",      label:"Fechamento Automático",       meta:"≥ 70%",   fmt:"%",  previa:false, check:(v)=>v>=70,     higher:true  },
+  { id:"oot",      label:"OOT Waves 3.0",               meta:"≥ 85%",   fmt:"%",  previa:false, check:(v)=>v>=85,     higher:true  }
+];
 
-// ============================================================
-// RENDER
-// ============================================================
-function fmt(v, unit) {
-  if (v === null || v === undefined) return null;
-  if (unit === "" ) return v.toFixed(2).replace('.', ',');
-  if (unit === " pcts") return v.toFixed(0) + " pcts";
-  return v.toFixed(2).replace('.', ',') + unit;
+// ── PREVIAS ────────────────────────────────────────────────────────────
+// Campos que eram prévia em 08/06/2026
+const PREVIAS_08 = { abs: true };
+
+// ── HELPERS ────────────────────────────────────────────────────────────
+function fmt(v, f) {
+  if (v===null||v===undefined) return "—";
+  if (f==="%") return v.toFixed(2).replace(".",",") + "%";
+  if (f==="") return v % 1 === 0 ? String(v) : v.toFixed(2).replace(".",",");
+  return String(v);
 }
 
-function cardStatus(key, val) {
-  if (val === null || val === undefined) return "pending";
-  if (key === "delay" && (val === null || val === 0)) return "pending";
-  return METAS[key].check(val) ? "green" : "red";
+function getStatus(cfg, v, date) {
+  if (v===null||v===undefined) return "pendente";
+  if (cfg.id==="delay" && (v===0||v===null)) return "pendente";
+  return cfg.check(v) ? "meta" : "fora";
 }
 
-function renderCard(key, val, isPrev, section) {
-  const m = METAS[key];
-  const status = cardStatus(key, val);
-  const chipClass = { green: "chip-green", red: "chip-red", pending: "chip-orange" }[status];
-  const chipLabel = { green: "Na Meta", red: "Fora da Meta", pending: "Pendente" }[status];
-  const cardClass = status;
+function renderCard(cfg, data, date) {
+  const v = data[cfg.id];
+  const isDelay = cfg.id==="delay";
+  const effectiveV = (isDelay && v===0) ? null : v;
+  const status = getStatus(cfg, effectiveV, date);
+  const el = document.getElementById("card-" + cfg.id);
 
-  let valueHtml;
-  if (status === "pending") {
-    valueHtml = `<div class="card-value pending">Pendente</div>`;
-  } else {
-    const fmtVal = fmt(val, m.unit);
-    const prevTag = isPrev ? `<span class="preview-tag">prévia</span>` : "";
-    valueHtml = `<div class="card-value">${fmtVal}${prevTag}</div>`;
-  }
+  const isPrev = cfg.id==="abs" && date==="08/06/2026" && PREVIAS_08.abs;
 
-  return `
-    <div class="card ${cardClass}" style="${section === 'full' ? 'width:100%' : ''}">
-      <span class="card-chip ${chipClass}">${chipLabel}</span>
-      <div class="card-name">${m.label}</div>
-      ${valueHtml}
-      <div class="card-meta">Meta: ${m.meta}</div>
-    </div>`;
+  let chipClass = status==="meta" ? "chip-meta-sm" : (status==="fora" ? "chip-fora-sm" : "chip-pend-sm");
+  let chipLabel = status==="meta" ? "Na Meta" : (status==="fora" ? "Fora da Meta" : "Pendente");
+  let valClass  = status==="meta" ? "meta-color" : (status==="fora" ? "fora-color" : "pend-color");
+  let cardClass = status;
+
+  el.className = "card " + cardClass;
+
+  let valueStr = status==="pendente" ? "Pendente" : fmt(effectiveV, cfg.fmt);
+  let prevTag  = (isPrev && status!=="pendente") ? '<span class="previa-tag">(prévia)</span>' : "";
+
+  el.innerHTML = `
+    <div class="card-header">
+      <div class="card-name">${cfg.label}</div>
+      <span class="status-chip ${chipClass}">${chipLabel}</span>
+    </div>
+    <div class="card-value ${valClass}">${valueStr}${prevTag}</div>
+    <div class="card-meta-info">Meta: ${cfg.meta}</div>
+  `;
 }
 
-function loadDate(dateStr) {
-  const d = HISTORICO[dateStr];
-  if (!d) return;
-
-  const previews = d.previews || [];
-
-  // Count statuses
-  let naMetaCount = 0, foraCount = 0, pendCount = 0;
-  const keys = ["abs","lms","cia","coa","spr","dit","delay","tmc","ds","fechamento","oot"];
-  keys.forEach(k => {
-    const s = cardStatus(k, d[k]);
-    if (s === "green") naMetaCount++;
-    else if (s === "red") foraCount++;
-    else pendCount++;
+function countStatus(data, date) {
+  let meta=0, fora=0, pend=0;
+  CONFIG.forEach(cfg => {
+    const v = data[cfg.id];
+    const isDelay = cfg.id==="delay";
+    const ev = (isDelay && v===0) ? null : v;
+    const s = getStatus(cfg, ev, date);
+    if (s==="meta") meta++;
+    else if (s==="fora") fora++;
+    else pend++;
   });
-
-  // Summary bar
-  document.getElementById("summaryBar").innerHTML = `
-    <div class="summary-item">
-      <div class="summary-dot dot-green"></div>
-      <div><div class="summary-count" style="color:#2e7d32">${naMetaCount}</div><div class="summary-label">Na Meta</div></div>
-    </div>
-    <div class="summary-item">
-      <div class="summary-dot dot-red"></div>
-      <div><div class="summary-count" style="color:#c62828">${foraCount}</div><div class="summary-label">Fora da Meta</div></div>
-    </div>
-    <div class="summary-item">
-      <div class="summary-dot dot-orange"></div>
-      <div><div class="summary-count" style="color:#e65100">${pendCount}</div><div class="summary-label">Pendente</div></div>
-    </div>`;
-
-  // Date display
-  const [dd, mm, yyyy] = dateStr.split("/");
-  const nomes = ["","Janeiro","Fevereiro","Março","Abril","Maio","Junho","Julho","Agosto","Setembro","Outubro","Novembro","Dezembro"];
-  document.getElementById("dateDisplay").textContent = `Referência: ${dd} de ${nomes[parseInt(mm)]} de ${yyyy}`;
-
-  // Cards
-  document.getElementById("mainContent").innerHTML = `
-    <div class="section">
-      <div class="section-title">People</div>
-      <div class="card-full">
-        ${renderCard("abs", d.abs, previews.includes("abs"), "full")}
-      </div>
-    </div>
-
-    <div class="section">
-      <div class="section-title">Profitability</div>
-      <div class="cards-row">
-        ${renderCard("lms", d.lms, previews.includes("lms"), "")}
-        ${renderCard("cia", d.cia, previews.includes("cia"), "")}
-        ${renderCard("coa", d.coa, previews.includes("coa"), "")}
-        ${renderCard("spr", d.spr, previews.includes("spr"), "")}
-      </div>
-    </div>
-
-    <div class="section">
-      <div class="section-title">Experience</div>
-      <div class="cards-grid3">
-        ${renderCard("dit", d.dit, previews.includes("dit"), "")}
-        ${renderCard("delay", d.delay, previews.includes("delay"), "")}
-        ${renderCard("tmc", d.tmc, previews.includes("tmc"), "")}
-        ${renderCard("ds", d.ds, previews.includes("ds"), "")}
-        ${renderCard("fechamento", d.fechamento, previews.includes("fechamento"), "")}
-        ${renderCard("oot", d.oot, previews.includes("oot"), "")}
-      </div>
-    </div>`;
+  return {meta,fora,pend};
 }
 
-// Populate date selector
-window.onload = function() {
-  const sel = document.getElementById("dateSelect");
+function renderSummary(data, date) {
+  const {meta,fora,pend} = countStatus(data, date);
+  const bar = document.getElementById("summaryBar");
+  bar.innerHTML = `
+    <span class="summary-chip chip-meta">✅ Na Meta: ${meta}</span>
+    <span class="summary-chip chip-fora">❌ Fora da Meta: ${fora}</span>
+    <span class="summary-chip chip-pend">⏳ Pendente: ${pend}</span>
+    <span class="summary-label">Total: ${CONFIG.length} indicadores</span>
+  `;
+}
+
+function loadDate(date) {
+  const data = HISTORICO[date] || {};
+  CONFIG.forEach(cfg => renderCard(cfg, data, date));
+  renderSummary(data, date);
+}
+
+// ── POPULATE DATE SELECTOR ─────────────────────────────────────────────
+function init() {
+  const sel = document.getElementById("dateSel");
   const dates = Object.keys(HISTORICO).reverse();
   dates.forEach(d => {
     const opt = document.createElement("option");
-    opt.value = d;
-    opt.textContent = d;
+    opt.value = d; opt.textContent = d;
     sel.appendChild(opt);
   });
-  // Load most recent date
-  if (dates.length > 0) {
-    sel.value = dates[0];
-    loadDate(dates[0]);
-  }
-};
+  sel.value = "08/06/2026";
+  loadDate("08/06/2026");
+}
+
+init();
 </script>
 </body>
 </html>
